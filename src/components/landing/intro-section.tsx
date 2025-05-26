@@ -25,7 +25,7 @@ export default function IntroSection() {
               alt="Intro Image"
               width={550}
               height={500}
-              className="w-full"
+              className="w-[90%]"
             />
           </div>
 
@@ -51,13 +51,13 @@ export default function IntroSection() {
             </p>
           </div>
 
-          <div className="basis-3/4">
+          <div className="basis-3/4 flex justify-end">
             <Image
               src="/illusts/intro-image-2.svg"
               alt="Intro Image"
               width={550}
               height={500}
-              className="w-full"
+              className="w-[90%]"
             />
           </div>
         </div>
