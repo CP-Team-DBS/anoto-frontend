@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
+import Container from "../ui/container";
 
 type FeatureItem = {
   id: number;
@@ -43,7 +44,7 @@ export default function FeatSection() {
 
   return (
     <section className="bg-primary text-white">
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <Container className="py-16">
         <h3 className="text-5xl font-bold text-center md:text-start">
           Fitur Utama <span className="text-secondary">Anoto</span>
         </h3>
@@ -65,7 +66,7 @@ export default function FeatSection() {
             </Card>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

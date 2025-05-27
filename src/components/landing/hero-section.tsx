@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import Container from "../ui/container";
 
 export default function HeroSection() {
   return (
     <section className="bg-primary text-white min-h-[calc(100vh-65px)] flex items-center py-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container size="sm">
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-col items-start justify-center gap-10 text-center md:text-start">
             <h2 className="text-6xl font-bold">
@@ -36,7 +37,7 @@ export default function HeroSection() {
             />
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
