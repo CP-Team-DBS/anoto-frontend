@@ -3,10 +3,13 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import * as motion from "motion/react-client";
 import Container from "../ui/container";
+import FloatingIcons from "./floating-icons";
 
 export default function HeroSection() {
   return (
-    <section className="bg-primary text-white min-h-[calc(100vh-65px)] flex items-center py-16">
+    <section className="bg-primary text-white min-h-[calc(100vh-65px)] flex items-center py-16 relative overflow-hidden">
+      <FloatingIcons />
+
       <Container size="sm">
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-col items-start justify-center gap-10 text-center md:text-start">
