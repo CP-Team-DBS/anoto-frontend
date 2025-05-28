@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import * as motion from "motion/react-client";
 import Container from "../ui/container";
 
 export default function HeroSection() {
@@ -9,25 +10,72 @@ export default function HeroSection() {
       <Container size="sm">
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-col items-start justify-center gap-10 text-center md:text-start">
-            <h2 className="text-6xl font-bold">
+            <motion.h2
+              initial={{
+                opacity: 0,
+                y: 100,
+                scale: 0.5,
+                rotate: -15,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                rotate: 0,
+              }}
+              transition={{
+                duration: 0.8,
+                type: "spring",
+                bounce: 0.4,
+              }}
+              className="text-6xl font-bold"
+            >
               Ayo Kenali Kecemasanmu, Mulai dari sini
-            </h2>
+            </motion.h2>
 
-            <p className="text-md">
+            <motion.p
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: 0.3,
+                ease: "easeOut",
+              }}
+              className="text-md"
+            >
               Jawab beberapa pertanyaan dalam waktu kurang dari 3 menit dan
               dapatkan wawasan tentang kondisi emosionalmu.
-            </p>
+            </motion.p>
 
-            <Button
-              size="lg"
-              className="bg-accent rounded-full mx-auto md:mx-0"
-              asChild
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: 0.6,
+                ease: "easeOut",
+              }}
             >
-              <Link href="/test">Mulai Tes Sekarang</Link>
-            </Button>
+              <Button
+                size="lg"
+                className="bg-accent rounded-full mx-auto md:mx-0 hover:scale-105 transition-transform"
+                asChild
+              >
+                <Link href="/test">Mulai Tes Sekarang</Link>
+              </Button>
+            </motion.div>
           </div>
 
-          <div className="w-full">
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.4,
+              ease: "easeOut",
+            }}
+          >
             <Image
               src="/illusts/hero-image.svg"
               alt="Hero Image"
@@ -35,7 +83,7 @@ export default function HeroSection() {
               height={500}
               className="w-[40%] md:w-[90%] mx-auto"
             />
-          </div>
+          </motion.div>
         </div>
       </Container>
     </section>
