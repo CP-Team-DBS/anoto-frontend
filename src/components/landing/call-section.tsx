@@ -7,27 +7,33 @@ interface FeatureCardProps {
   description: string;
   bgColor: string;
   delay: number;
+  index: number; 
 }
 
-const FeatureCard = ({ title, description, bgColor, delay }: FeatureCardProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 50 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.6, delay, ease: "easeOut" }}
-    style={{ width: 585, height: 215 }}
-    className="rounded-2xl shadow-lg"
-  >
-    <Card className={`${bgColor} text-white w-full h-full rounded-2xl`}>
-      <CardHeader className="pb-2 px-8">
-        <CardTitle className="text-[27px] font-bold">{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="text-[20px] pt-0 px-8 pb-7">
-        {description}
-      </CardContent>
-    </Card>
-  </motion.div>
-);
+const FeatureCard = ({ title, description, bgColor, delay, index }: FeatureCardProps) => {
+  const isTopRow = index < 2;
+  const xDirection = isTopRow ? 100 : -100; 
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: xDirection }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      style={{ width: 585, height: 215 }}
+      className="rounded-2xl shadow-lg"
+    >
+      <Card className={`${bgColor} text-white w-full h-full rounded-2xl`}>
+        <CardHeader className="pb-2 px-8">
+          <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-lg pt-0 px-8 pb-7">
+          {description}
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+};
 
 const features = [
     {
@@ -62,14 +68,14 @@ const features = [
 
 export default function CallSection() {
   return (
-    <section className="bg-white font-sans">
+    <section className="bg-white font-sans overflow-hidden">
       <Container className="py-16">
         <motion.h2
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-[60px] font-bold text-[#0E103D] text-center md:text-start"
+          className="text-5xl font-bold text-[#0E103D] text-center md:text-start"
         >
           Kenapa <span className="text-[#8B5CF6]">Anoto?</span>
         </motion.h2>
@@ -78,7 +84,7 @@ export default function CallSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="text-[20px] text-[#1A1A19] mt-4 max-w-2xl text-center md:text-start"
+            className="text-xl text-[#1A1A19] mt-4 max-w-2xl text-center md:text-start"
         >
             Karena ngerti perasaan sendiri itu penting. Dan<br />
             Anoto bantu kamu mulai dari hal kecil.
@@ -86,7 +92,7 @@ export default function CallSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 mt-16 place-items-center">
           {features.map((feature, index) => (
-            <FeatureCard key={index} {...feature} />
+            <FeatureCard key={index} {...feature} index={index} />
           ))}
         </div>
 
@@ -96,7 +102,7 @@ export default function CallSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-            className="text-[30px] font-bold text-[#0E103D] text-center max-w-3xl"
+            className="text-3xl font-bold text-[#0E103D] text-center max-w-3xl"
           >
             &ldquo;Mental illness is nothing to be ashamed of, but stigma and bias shame us all.&rdquo;
           </motion.p>
@@ -105,7 +111,7 @@ export default function CallSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-            className="text-[30px] italic text-[#8B5CF6] mt-2"
+            className="text-3xl italic text-[#8B5CF6] mt-2"
           >
             -Bill Clinton
           </motion.span>
