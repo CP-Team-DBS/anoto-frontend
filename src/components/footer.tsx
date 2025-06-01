@@ -1,6 +1,6 @@
-import Container from "../ui/container";
+import Container from "./ui/container";
 
-export default function FooterSection() {
+export default function Footer() {
   return (
     <footer className="bg-[#0E103D] text-white pt-8 pb-4 font-sans">
       <Container>
@@ -8,8 +8,10 @@ export default function FooterSection() {
           <div className="md:w-1/3">
             <div className="font-bold text-2xl leading-tight">Anoto</div>
             <div className="mt-4 text-base font-normal leading-relaxed max-w-md text-white/90">
-              Anoto adalah ruang menulis reflektif<br />
-              berbasis NLP untuk bantu kamu mengenali<br />
+              Anoto adalah ruang menulis reflektif
+              <br />
+              berbasis NLP untuk bantu kamu mengenali
+              <br />
               dan merawat kesehatan mental.
             </div>
           </div>
