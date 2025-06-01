@@ -1,5 +1,4 @@
 import Container from "@/components/ui/container";
-import FooterSection from "@/components/landing/footer-section";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -22,10 +21,6 @@ export default function IntroJournal() {
           </div>
         </div>
       </Container>
-      
-      <div className="mt-auto">
-        <FooterSection />
-      </div>
     </div>
   );
 }
