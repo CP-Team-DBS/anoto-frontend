@@ -1,5 +1,5 @@
-import HeroJournal from "@/components/jurnal/hero-journal";
-import IntroJournal from "@/components/jurnal/intro-journal";
+import HeroJournal from "@/components/journal/hero-journal";
+import IntroJournal from "@/components/journal/intro-journal";
 export default function JurnalPage() {
   return (
     <>
