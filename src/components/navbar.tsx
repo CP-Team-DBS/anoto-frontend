@@ -23,7 +23,7 @@ export default function Navbar() {
               <Link href="/test">Test</Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/journal">Journal</Link>
+              <Link href="/journal" className="font-bold">Journal</Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
