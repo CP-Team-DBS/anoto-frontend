@@ -1,19 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Container from "@/components/ui/container";
-import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-type Information = {
+interface TestStep {
   id: number;
   icon: string;
   title: string;
   description: string;
-};
+}
 
 export default function TestPage() {
-  const informations: Information[] = [
+  const testSteps: TestStep[] = [
     {
       id: 1,
       icon: "start-test-1.svg",
@@ -38,46 +37,87 @@ export default function TestPage() {
   ];
 
   return (
-    <>
-      <section className="bg-primary text-white py-16 pb-[17rem]">
-        <Container className="relative">
-          <div className="max-w-md text-center space-y-7 mx-auto">
-            <h1 className="text-5xl font-bold">Yuk, Mulai Tesnya!</h1>
-            <p className="text-md">
-              Tenang aja, gak ada jawaban benar atau salah. Ini cuma buat bantu
-              kamu kenal diri sendiri lebih baik.
-            </p>
-          </div>
+    <div className="min-h-screen bg-white flex flex-col">
+      <HeaderSection />
+      <ContentSection testSteps={testSteps} />
+    </div>
+  );
+}
 
-          <div className="grid grid-cols-1 gap-5 w-full max-w-6xl mt-20 mx-auto absolute left-1/2 transform -translate-x-1/2 px-4 md:grid-cols-3">
-            {informations.map((info) => (
-              <Card key={info.id} className="text-center py-16">
-                <CardHeader>
-                  <Image
-                    src={`/icons/${info.icon}`}
-                    alt={info.title}
-                    width={100}
-                    height={100}
-                    className="mx-auto mb-5"
-                  />
-                  <h3 className="text-2xl font-bold">{info.title}</h3>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-md">{info.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </section>
+function HeaderSection() {
+  return (
+    <section className="bg-primary text-white py-16 pb-[220px]">
+      <Container>
+        <div className="max-w-md text-center space-y-7 mx-auto">
+          <h1 className="text-5xl font-bold">Yuk, Mulai Tesnya!</h1>
+          <p className="text-md">
+            Tenang aja, gak ada jawaban benar atau salah. Ini cuma buat bantu
+            kamu kenal diri sendiri lebih baik.
+          </p>
+        </div>
+      </Container>
+    </section>
+  );
+}
 
-      <section className="flex justify-center items-end py-6 min-h-[calc(100vh-30rem)]">
-        <Button className="bg-accent" size="lg" asChild>
-          <Link href="/test/questions">
-            Mulai Tes <MoveRight />
-          </Link>
-        </Button>
-      </section>
-    </>
+interface ContentSectionProps {
+  testSteps: TestStep[];
+}
+
+function ContentSection({ testSteps }: ContentSectionProps) {
+  return (
+    <section className="relative bg-white flex flex-col flex-1">
+      <Container>
+        <div className="relative -mt-[180px] grid grid-cols-1 gap-5 w-full max-w-6xl mx-auto px-4 md:grid-cols-3">
+          {testSteps.map((step) => (
+            <StepCard key={step.id} step={step} />
+          ))}
+        </div>
+        <StartButton />
+      </Container>
+    </section>
+  );
+}
+
+interface StepCardProps {
+  step: TestStep;
+}
+
+function StepCard({ step }: StepCardProps) {
+  const textColor = "text-[#0E103D]";
+
+  return (
+    <Card className={`text-center py-16 shadow-lg h-[360px] md:h-[400px] flex flex-col justify-center ${textColor}`}>
+      <CardHeader>
+        <Image
+          src={`/icons/${step.icon}`}
+          alt={step.title}
+          width={100}
+          height={100}
+          style={{ width: "auto", height: "auto" }}
+          className="mx-auto mb-5"
+        />
+        <h3 className={`text-2xl font-bold ${textColor}`}>{step.title}</h3>
+      </CardHeader>
+      <CardContent>
+        <p className={`text-md ${textColor}`}>{step.description}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function StartButton() {
+  return (
+    <div className="flex justify-center mt-16 pb-16">
+      <Button
+        size="lg"
+        className="bg-accent rounded-full mx-auto md:mx-0 hover:scale-105 transition-transform text-2xl px-8 py-8"
+        asChild
+      >
+        <Link href="/test/form">
+          Mulai Tes →
+        </Link>
+      </Button>
+    </div>
   );
 }
