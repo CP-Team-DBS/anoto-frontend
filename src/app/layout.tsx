@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
+import ConditionalFooter from "@/components/conditional-footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,7 +29,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
         <Navbar />
         <main>{children}</main>
-        <Footer />
+        <ConditionalFooter />
       </body>
     </html>
   );
