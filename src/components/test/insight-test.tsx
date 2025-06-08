@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Container from "@/components/ui/container";
 import FlippableCard from "@/components/test/flippable-card";
-import TestFooter from "./test-footer";
+import TestFooter from "../test-footer";
 import { ArrowLeft } from "lucide-react";
 
 interface EmotionData {

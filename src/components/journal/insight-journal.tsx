@@ -1,6 +1,7 @@
 import Container from "@/components/ui/container";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import TestFooter from "@/components/test-footer";
 
 
 interface Emotion {
@@ -114,13 +115,8 @@ export default function InsightPage() {
         <SuggestionsList suggestions={insights.suggestions} />
       </Container>
 
-      {/* Custom Footer */}
-      <div className="bg-[#0E103D] text-white pt-4 pb-8 font-sans border-t border-white/30">
-        <Container className="flex flex-col md:flex-row justify-between items-center text-sm">
-          <div className="font-bold text-base" style={{ fontFamily: 'Inter' }}>Anoto</div>
-          <div className="mt-2 md:mt-0 text-white/70 text-xs">© 2025 Anoto. All rights reserved.</div>
-        </Container>
-      </div>
+      {/* Test Footer */}
+      <TestFooter />
     </div>
   );
 }

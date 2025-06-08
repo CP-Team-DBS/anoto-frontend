@@ -5,7 +5,7 @@ import Container from "@/components/ui/container";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import TestFooter from "./test-footer";
+import TestFooter from "../test-footer";
 import { ArrowLeft } from "lucide-react";
 
 interface Question {
