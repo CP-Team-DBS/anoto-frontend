@@ -11,7 +11,6 @@ const UI_CONSTANTS = {
   colors: {
     background: "#0E103D",
     purple: "#8B5CF6",
-    yellow: "#FAA916"
   }
 };
 
@@ -27,14 +26,14 @@ const FEATURES = [
 		title: "Bukan Buat Nge-judge, Tapi Ngebantu",
 		description:
 			"Anoto nggak ngasih label. Hasil tesnya dibuat supaya kamu bisa lebih paham diri, bukan buat nakut-nakutin.",
-		bgColor: `bg-[${UI_CONSTANTS.colors.yellow}]`,
+		bgColor: `bg-accent`,
 		delay: 0.2,
 	},
 	{
 		title: "Privasi Kamu Aman Banget",
 		description:
 			"Jawaban kamu gak akan dishare ke siapa-siapa. Semuanya disimpan aman, dan cuma kamu yang bisa lihat.",
-		bgColor: `bg-[${UI_CONSTANTS.colors.yellow}]`,
+		bgColor: `bg-accent`,
 		delay: 0.3,
 	},
 	{
@@ -86,7 +85,7 @@ const FeatureCard = ({ title, description, bgColor, delay, index }: FeatureCardP
 	
 	const cardProps = {
 		dimensions: { width: 585, height: 195 }, 
-		className: `${bgColor} rounded-2xl text-white w-full h-full border-0 shadow-lg`
+		className: `${bgColor} rounded-2xl text-white w-full h-full border-0`
 	};
 
 	return (
