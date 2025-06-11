@@ -1,21 +1,20 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/components/ui/container";
 import FlippableCard from "@/components/test/flippable-card";
 import TestFooter from "../test-footer";
 import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
 
-// Types
-export type AnxietyLevel = 'normal' | 'anxious_light' | 'anxious_moderate' | 'anxious_severe';
+type AnxietyLevel = 'normal' | 'anxious_light' | 'anxious_moderate' | 'anxious_severe';
 
-export interface TestResult {
+interface TestResult {
   result: string;
   description: string;
   level: AnxietyLevel;
-  score?: number;
 }
 
 interface TestInsightPageProps {
@@ -27,12 +26,19 @@ interface LevelConfig {
   readonly svgPath: string;
 }
 
-// Constants
 const ANXIETY_LEVELS = {
   NORMAL: 'normal',
   LIGHT: 'anxious_light', 
   MODERATE: 'anxious_moderate',
   SEVERE: 'anxious_severe'
+} as const;
+
+// Mapping API anxiety levels to our application's internal levels
+const API_LEVEL_MAPPING: Record<string, AnxietyLevel> = {
+  "Normal": ANXIETY_LEVELS.NORMAL,
+  "Ringan": ANXIETY_LEVELS.LIGHT,
+  "Sedang": ANXIETY_LEVELS.MODERATE,
+  "Berat": ANXIETY_LEVELS.SEVERE,
 } as const;
 
 const ANXIETY_LEVEL_CONFIG: Record<AnxietyLevel, LevelConfig> = {
@@ -74,57 +80,46 @@ const ROUTES = {
   TEST_HOME: "/test"
 } as const;
 
+// Development fallback - will be replaced by backend data
 const FALLBACK_RESULT: TestResult = {
   result: "Normal",
   description: "Kamu tidak merasakan kecemasan yang signifikan. Terus jaga kesehatan mentalmu!",
-  level: ANXIETY_LEVELS.NORMAL,
-  score: 0
+  level: ANXIETY_LEVELS.NORMAL
 } as const;
 
-// Hooks
-const useTestResult = (initialTestResult?: TestResult) => {
-  const [result, setResult] = useState<TestResult | null>(null);
+function useTestResults() {
+  const searchParams = useSearchParams();
+  const [testResult, setTestResult] = useState<TestResult | null>(null);
   
   useEffect(() => {
-    // Use prop if provided
-    if (initialTestResult) {
-      setResult(initialTestResult);
-      return;
-    }
+    const anxietyLevel = searchParams?.get('anxiety_level');
+    const message = searchParams?.get('message');
     
-    // Try to get result from localStorage
-    try {
-      const savedResult = localStorage.getItem('gad7_result');
+    if (anxietyLevel && message) {
+      const level = API_LEVEL_MAPPING[anxietyLevel] || ANXIETY_LEVELS.NORMAL;
       
-      if (savedResult) {
-        setResult(JSON.parse(savedResult));
-      } else {
-        setResult(FALLBACK_RESULT);
-      }
-    } catch (e) {
-      console.error('Failed to parse saved result:', e);
-      setResult(FALLBACK_RESULT);
+      setTestResult({
+        result: anxietyLevel,
+        description: message,
+        level: level
+      });
     }
-  }, [initialTestResult]);
-
-  return result ?? FALLBACK_RESULT;
-};
-
-// Utility functions
-const getAnxietyConfig = (level: AnxietyLevel): LevelConfig => ANXIETY_LEVEL_CONFIG[level];
-
-const getCardMaxWidth = (): string => (
-  LAYOUT_CONFIG.CARD.STYLE.includes("md:w-[380px]") 
-    ? LAYOUT_CONFIG.CARD.MAX_WIDTH.DESKTOP 
-    : LAYOUT_CONFIG.CARD.MAX_WIDTH.MOBILE
-);
-
-// UI Components
-interface CardContentProps {
-  testResult: TestResult;
+  }, [searchParams]);
+  
+  return testResult || FALLBACK_RESULT;
 }
 
-const TestResultCardFront = ({ testResult }: CardContentProps) => {
+function getAnxietyConfig(level: AnxietyLevel): LevelConfig {
+  return ANXIETY_LEVEL_CONFIG[level];
+}
+
+function getCardMaxWidth(): string {
+  return LAYOUT_CONFIG.CARD.STYLE.includes("md:w-[380px]") 
+    ? LAYOUT_CONFIG.CARD.MAX_WIDTH.DESKTOP 
+    : LAYOUT_CONFIG.CARD.MAX_WIDTH.MOBILE;
+}
+
+function TestResultCardFront({ testResult }: { testResult: TestResult }) {
   const config = getAnxietyConfig(testResult.level);
 
   return (
@@ -145,32 +140,21 @@ const TestResultCardFront = ({ testResult }: CardContentProps) => {
       <h1 className="text-4xl md:text-5xl font-bold text-center leading-tight">
         {testResult.result}
       </h1>
-      {testResult.score !== undefined && (
-        <p className="mt-4 text-xl">
-          Skor: {testResult.score}/21
-        </p>
-      )}
     </div>
   );
-};
+}
 
-const TestResultCardBack = ({ testResult }: CardContentProps) => {
+function TestResultCardBack({ testResult }: { testResult: TestResult }) {
   const config = getAnxietyConfig(testResult.level);
 
   return (
     <div className="flex flex-col items-center text-[#0E103D] text-center p-6 h-full justify-center">
       <h2 
-        className="text-4xl md:text-5xl font-bold text-center leading-tight mb-4"
+        className="text-4xl md:text-5xl font-bold text-center leading-tight mb-8"
         style={{ color: config.color }}
       >
         {testResult.result}
       </h2>
-      
-      {testResult.score !== undefined && (
-        <p className="mb-4 text-lg" style={{ color: config.color }}>
-          Skor: {testResult.score}/21
-        </p>
-      )}
       
       <div className="flex items-center justify-center px-4">
         <p className="text-lg leading-relaxed text-[#0E103D]">
@@ -179,49 +163,53 @@ const TestResultCardBack = ({ testResult }: CardContentProps) => {
       </div>
     </div>
   );
-};
+}
 
-interface NavigationLinkProps {
+function NavigationLink({ href, children, className = "" }: {
   href: string;
   children: React.ReactNode;
   className?: string;
+}) {
+  return (
+    <Link 
+      href={href}
+      className={`text-white/80 hover:text-white transition-colors duration-200 text-base font-medium ${className}`}
+    >
+      {children}
+    </Link>
+  );
 }
 
-const NavigationLink = ({ href, children, className = "" }: NavigationLinkProps) => (
-  <Link 
-    href={href}
-    className={`text-white/80 hover:text-white transition-colors duration-200 text-base font-medium ${className}`}
-  >
-    {children}
-  </Link>
-);
+function TestNavigationBar({ maxWidth }: { maxWidth: string }) {
+  return (
+    <nav className="flex justify-between items-center w-full" style={{ maxWidth }}>
+      <NavigationLink href={ROUTES.TEST_FORM}>
+        Tes Ulang
+      </NavigationLink>
+      <NavigationLink href={ROUTES.JOURNAL}>
+        Isi Jurnal
+      </NavigationLink>
+    </nav>
+  );
+}
 
-const TestNavigationBar = ({ maxWidth }: { maxWidth: string }) => (
-  <nav className="flex justify-between items-center w-full" style={{ maxWidth }}>
-    <NavigationLink href={ROUTES.TEST_FORM}>
-      Tes Ulang
-    </NavigationLink>
-    <NavigationLink href={ROUTES.JOURNAL}>
-      Isi Jurnal
-    </NavigationLink>
-  </nav>
-);
+function BackNavigationButton() {
+  return (
+    <div className="w-full max-w-md mb-8 text-left">
+      <NavigationLink 
+        href={ROUTES.TEST_HOME}
+        className="inline-flex items-center"
+      >
+        <ArrowLeft className="h-5 w-5 mr-2" />
+        Kembali
+      </NavigationLink>
+    </div>
+  );
+}
 
-const BackNavigationButton = () => (
-  <div className="w-full max-w-md mb-8 text-left">
-    <NavigationLink 
-      href={ROUTES.TEST_HOME}
-      className="inline-flex items-center"
-    >
-      <ArrowLeft className="h-5 w-5 mr-2" />
-      Kembali
-    </NavigationLink>
-  </div>
-);
-
-// Main component
-export default function TestInsightPage({ testResult }: TestInsightPageProps) {
-  const currentResult = useTestResult(testResult);
+export default function TestInsightPage({ testResult: propTestResult }: TestInsightPageProps) {
+  const apiTestResult = useTestResults();
+  const currentResult = propTestResult ?? apiTestResult;
   const maxWidth = getCardMaxWidth();
   
   return (

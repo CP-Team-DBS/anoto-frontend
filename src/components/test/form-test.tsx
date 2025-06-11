@@ -7,21 +7,13 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import TestFooter from "../test-footer";
 import { ArrowLeft } from "lucide-react";
-import { GAD7FormData, predictAnxiety, mapAnxietyLevelToUi } from "@/lib/api/gad7-api";
 
 
-// Types
 interface Question {
   id: number;
   text: string;
   options: string[];
 }
-
-// Constants
-const ROUTES = {
-  TEST_HOME: "/test",
-  TEST_INSIGHT: "/test/insight",
-};
 
 const ANXIETY_TEST_CONFIG = {
   answerOptions: [
@@ -53,35 +45,11 @@ const QUESTIONS: readonly Question[] = ANXIETY_TEST_CONFIG.questions.map(q => ({
   options: [...ANXIETY_TEST_CONFIG.answerOptions]
 }));
 
-// Utility functions
-const mapQuestionIdToApiField = (id: number): keyof GAD7FormData => {
-  const fieldMap: Record<number, keyof GAD7FormData> = {
-    1: 'merasa_gugup_cemas_atau_gelisah',
-    2: 'tidak_dapat_menghentikan_kekhawatiran',
-    3: 'banyak_mengkhawatirkan_berbagai_hal',
-    4: 'sulit_merasa_santai',
-    5: 'sangat_gelisah_sehingga_sulit_untuk_diam',
-    6: 'mudah_tersinggung_dan_mudah_marah',
-    7: 'merasa_takut_seolah_olah_sesuatu_buruk_akan_terjadi'
-  };
-  
-  return fieldMap[id];
-};
-
-const createFallbackResult = () => ({
-  result: "Ringan",
-  description: "Tingkat kecemasan Anda tergolong ringan. Perlu mulai memperhatikan tanda-tanda stres dan mengelolanya dengan baik.",
-  level: "anxious_light",
-  score: 5
-});
-
-// Custom hook for form state management
 function useAnxietyTestForm() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [isProcessing, setIsProcessing] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
 
   const currentQuestion = QUESTIONS[currentStep];
   const isLastQuestion = currentStep === QUESTIONS.length - 1;
@@ -91,51 +59,80 @@ function useAnxietyTestForm() {
     setUserAnswers(prev => ({ ...prev, [currentQuestion.id]: answer }));
   }, [currentQuestion.id]);
 
-  const prepareApiData = useCallback((): GAD7FormData => {
-    const apiData = {} as GAD7FormData;
+  // Format answers for API request
+  const formatAnswersForApi = useCallback(() => {
+    const questionKeyMap: Record<number, string> = {
+      1: "merasa_gugup_cemas_atau_gelisah",
+      2: "tidak_dapat_menghentikan_kekhawatiran",
+      3: "banyak_mengkhawatirkan_berbagai_hal",
+      4: "sulit_merasa_santai",
+      5: "sangat_gelisah_sehingga_sulit_untuk_diam",
+      6: "mudah_tersinggung_dan_mudah_marah",
+      7: "merasa_takut_seolah_olah_sesuatu_buruk_akan_terjadi"
+    };
+
+    const formattedData: Record<string, string> = {};
     
     Object.entries(userAnswers).forEach(([questionId, answer]) => {
-      const apiField = mapQuestionIdToApiField(Number(questionId));
-      apiData[apiField] = answer;
+      const key = questionKeyMap[Number(questionId)];
+      if (key) {
+        formattedData[key] = answer;
+      }
     });
     
-    return apiData;
+    return formattedData;
   }, [userAnswers]);
 
   const submitTest = useCallback(async () => {
     setIsProcessing(true);
-    setApiError(null);
     
     try {
-      const apiData = prepareApiData();
-      console.log('Submitting test data:', apiData);
+      const formattedData = formatAnswersForApi();
       
-      const result = await predictAnxiety(apiData);
-      console.log('API Response:', result);
+      // Use the API route /predict
+      const response = await fetch('/api/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formattedData)
+      });
       
-      const testResult = {
-        result: result.anxiety_level,
-        description: result.message,
-        level: mapAnxietyLevelToUi(result.anxiety_level),
-        score: result.total_score
-      };
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
       
-      localStorage.setItem('gad7_result', JSON.stringify(testResult));
-      router.push(ROUTES.TEST_INSIGHT);
+      const data = await response.json();
+      
+      // Create URL string with query parameters for App Router
+      const searchParams = new URLSearchParams({
+        anxiety_level: data.anxiety_level,
+        message: data.message
+      });
+      
+      // Navigate with string URL instead of object
+      router.push(`/test/insight?${searchParams.toString()}`);
     } catch (error) {
       console.error('Test submission failed:', error);
+
+      alert("Terjadi kesalahan saat memproses hasil tes. Silakan coba lagi.");
       
-      const fallbackResult = createFallbackResult();
-      localStorage.setItem('gad7_result', JSON.stringify(fallbackResult));
-      router.push(ROUTES.TEST_INSIGHT);
+      // Use fallback values with string URL format
+      const fallbackParams = new URLSearchParams({
+        anxiety_level: "Ringan",
+        message: "Tingkat kecemasan Anda tergolong ringan. Perlu mulai memperhatikan tanda-tanda stres dan mengelolanya dengan baik."
+      });
+      router.push(`/test/insight?${fallbackParams.toString()}`);
     } finally {
       setIsProcessing(false);
     }
-  }, [router, prepareApiData]);
+  }, [router, formatAnswersForApi]);
 
   const navigateStep = useCallback(async (direction: 'next' | 'previous') => {
-    if (direction === 'previous' && currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
+    if (direction === 'previous') {
+      if (currentStep > 0) {
+        setCurrentStep(prev => prev - 1);
+      }
       return;
     }
 
@@ -155,27 +152,26 @@ function useAnxietyTestForm() {
     isProcessing,
     isLastQuestion,
     hasCurrentAnswer,
-    apiError,
     selectAnswer,
-    navigateStep,
-    totalSteps: QUESTIONS.length
+    navigateStep
   };
 }
 
-// UI Components
-const TestNavigationHeader = () => (
-  <header className="w-full max-w-lg mb-6">
-    <Link 
-      href={ROUTES.TEST_HOME}
-      className="flex items-center text-white/80 hover:text-white transition-colors duration-200"
-    >
-      <ArrowLeft className="h-5 w-5 mr-2" />
-      Kembali
-    </Link>
-  </header>
-);
+function TestNavigationHeader() {
+  return (
+    <header className="w-full max-w-lg mb-6">
+      <Link 
+        href="/test" 
+        className="flex items-center text-white/80 hover:text-white transition-colors duration-200"
+      >
+        <ArrowLeft className="h-5 w-5 mr-2" />
+        Kembali
+      </Link>
+    </header>
+  );
+}
 
-const TestProgressIndicator = ({ current, total }: { current: number; total: number }) => {
+function TestProgressIndicator({ current, total }: { current: number; total: number }) {
   const percentage = Math.round(((current + 1) / total) * 100);
   
   return (
@@ -198,9 +194,9 @@ const TestProgressIndicator = ({ current, total }: { current: number; total: num
       </div>
     </div>
   );
-};
+}
 
-const AnswerOption = ({ 
+function AnswerOption({ 
   text, 
   isSelected, 
   onSelect, 
@@ -210,21 +206,23 @@ const AnswerOption = ({
   isSelected: boolean;
   onSelect: () => void;
   disabled: boolean;
-}) => (
-  <button
-    onClick={onSelect}
-    disabled={disabled}
-    className={`w-full text-left px-4 py-3 border rounded-md text-sm font-normal transition-all duration-200 ${
-      isSelected 
-        ? 'bg-[#0E103D] text-white border-[#0E103D] shadow-md' 
-        : 'bg-white text-[#0E103D] border-gray-300 hover:border-[#0E103D] hover:bg-gray-50'
-    } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-  >
-    <span className="leading-relaxed">{text}</span>
-  </button>
-);
+}) {
+  return (
+    <button
+      onClick={onSelect}
+      disabled={disabled}
+      className={`w-full text-left px-4 py-3 border rounded-md text-sm font-normal transition-all duration-200 ${
+        isSelected 
+          ? 'bg-[#0E103D] text-white border-[#0E103D] shadow-md' 
+          : 'bg-white text-[#0E103D] border-gray-300 hover:border-[#0E103D] hover:bg-gray-50'
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+    >
+      <span className="leading-relaxed">{text}</span>
+    </button>
+  );
+}
 
-const AnswerOptionsList = ({ 
+function AnswerOptionsList({ 
   options, 
   selectedAnswer, 
   onSelect,
@@ -234,21 +232,23 @@ const AnswerOptionsList = ({
   selectedAnswer?: string; 
   onSelect: (option: string) => void;
   disabled?: boolean;
-}) => (
-  <div className="flex flex-col gap-3 w-full mb-6">
-    {options.map((option) => (
-      <AnswerOption
-        key={option}
-        text={option}
-        isSelected={selectedAnswer === option}
-        onSelect={() => onSelect(option)}
-        disabled={disabled}
-      />
-    ))}
-  </div>
-);
+}) {
+  return (
+    <div className="flex flex-col gap-3 w-full mb-6">
+      {options.map((option) => (
+        <AnswerOption
+          key={option}
+          text={option}
+          isSelected={selectedAnswer === option}
+          onSelect={() => onSelect(option)}
+          disabled={disabled}
+        />
+      ))}
+    </div>
+  );
+}
 
-const TestNavigationButtons = ({ 
+function TestNavigationButtons({ 
   onNext,
   onPrevious,
   isLastStep,
@@ -262,36 +262,38 @@ const TestNavigationButtons = ({
   isNextDisabled: boolean;
   isPreviousDisabled: boolean;
   isSubmitting: boolean;
-}) => (
-  <nav className="flex justify-between items-center w-full mt-auto">
-    <Button
-      onClick={onPrevious}
-      disabled={isPreviousDisabled}
-      variant="outline"
-      className={`py-2 px-4 rounded-md transition-all duration-200 ${
-        isPreviousDisabled 
-          ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200' 
-          : 'bg-white text-[#0E103D] border-[#0E103D] hover:bg-[#0E103D] hover:text-white'
-      }`}
-    >
-      ← Sebelumnya
-    </Button>
+}) {
+  return (
+    <nav className="flex justify-between items-center w-full mt-auto">
+      <Button
+        onClick={onPrevious}
+        disabled={isPreviousDisabled}
+        variant="outline"
+        className={`py-2 px-4 rounded-md transition-all duration-200 ${
+          isPreviousDisabled 
+            ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200' 
+            : 'bg-white text-[#0E103D] border-[#0E103D] hover:bg-[#0E103D] hover:text-white'
+        }`}
+      >
+        ← Sebelumnya
+      </Button>
 
-    <Button 
-      onClick={onNext}
-      disabled={isNextDisabled}
-      className={`py-2 px-6 rounded-md transition-all duration-200 text-white ${
-        isNextDisabled 
-          ? 'bg-gray-400 cursor-not-allowed' 
-          : 'bg-[#0E103D] hover:bg-[#0E103D]/90'
-      }`}
-    >
-      {isSubmitting ? "Memproses..." : (isLastStep ? "Selesai" : "Selanjutnya →")}
-    </Button>
-  </nav>
-);
+      <Button 
+        onClick={onNext}
+        disabled={isNextDisabled}
+        className={`py-2 px-6 rounded-md transition-all duration-200 text-white ${
+          isNextDisabled 
+            ? 'bg-gray-400 cursor-not-allowed' 
+            : 'bg-[#0E103D] hover:bg-[#0E103D]/90'
+        }`}
+      >
+        {isSubmitting ? "Memproses..." : (isLastStep ? "Selesai" : "Selanjutnya →")}
+      </Button>
+    </nav>
+  );
+}
 
-const TestQuestionCard = ({
+function TestQuestionCard({
   question,
   currentStep,
   totalSteps,
@@ -309,7 +311,7 @@ const TestQuestionCard = ({
   onNavigate: (direction: 'next' | 'previous') => void;
   isLastStep: boolean;
   isSubmitting: boolean;
-}) => {
+}) {
   const isNextDisabled = selectedAnswer === undefined || isSubmitting;
   const isPreviousDisabled = currentStep === 0 || isSubmitting;
   
@@ -338,9 +340,8 @@ const TestQuestionCard = ({
       />
     </main>
   );
-};
+}
 
-// Main component
 export default function AnxietyTestForm() {
   const {
     currentStep,
@@ -349,8 +350,7 @@ export default function AnxietyTestForm() {
     isProcessing,
     isLastQuestion,
     selectAnswer,
-    navigateStep,
-    totalSteps
+    navigateStep
   } = useAnxietyTestForm();
 
   return (
@@ -360,7 +360,7 @@ export default function AnxietyTestForm() {
         <TestQuestionCard 
           question={currentQuestion}
           currentStep={currentStep}
-          totalSteps={totalSteps}
+          totalSteps={QUESTIONS.length}
           selectedAnswer={userAnswers[currentQuestion.id]}
           onAnswerSelect={selectAnswer}
           onNavigate={navigateStep}
