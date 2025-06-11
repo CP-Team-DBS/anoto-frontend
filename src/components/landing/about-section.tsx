@@ -16,7 +16,7 @@ const UI_CONSTANTS = {
   },
   profileImage: {
     path: "/profile/profile-user.svg",
-    size: 80,
+    size: 128,
   },
   socialIcons: {
     size: 24,
@@ -46,60 +46,62 @@ const createFadeAnimation = (direction: 'y' | 'x' | 'scale', value: number, dela
 
 const teamMembers: TeamMember[] = [
   {
-    name: "Your Name 1",
-    role: "Your Role 1",
-    image: "/path/to/image1.jpg",
+    name: "Muhammad Lutfi Hakim",
+    role: "Machine Learning Engineer",
+    image: "/profile/hakim.jpg",
+    linkedin: "https://www.linkedin.com/in/hakimlutfi",
+    github: "https://github.com/hakimlutfi46",
+  },
+  {
+    name: "Laila Wulandari",
+    role: "Machine Learning Engineer",
+    image: "/profile/laila.jpg",
+    linkedin: "https://www.linkedin.com/in/LailaWulandari",
+    github: "https://github.com/lailaWulandarii",
+  },
+  {
+    name: "Arya Gunawan",
+    role: "Machine Learning Engineer",
+    image: "/profile/arya.jpg",
+    linkedin: "https://www.linkedin.com/in/arya-gunawan/",
+    github: "https://github.com/Aryaagunawan",
+  },
+  {
+    name: "Ahmad Irsyadul 'Ibad",
+    role: "Software Engineer",
+    image: "/profile/profile-user.svg",
     linkedin: "#",
     github: "#",
   },
   {
-    name: "Your Name 2",
-    role: "Your Role 2",
-    image: "/path/to/image2.jpg",
-    linkedin: "#",
-    github: "#",
+    name: "Muhammad Rivqi Al Varras",
+    role: "Software Engineer",
+    image: "/profile/varras.jpg",
+    linkedin: "https://www.linkedin.com/in/al-varras/",
+    github: "https://github.com/Alvarras",
   },
   {
-    name: "Your Name 3",
-    role: "Your Role 3",
-    image: "/path/to/image3.jpg",
-    linkedin: "#",
-    github: "#",
-  },
-  {
-    name: "Your Name 4",
-    role: "Your Role 4",
-    image: "/path/to/image4.jpg",
-    linkedin: "#",
-    github: "#",
-  },
-  {
-    name: "Your Name 5",
-    role: "Your Role 5",
-    image: "/path/to/image5.jpg",
-    linkedin: "#",
-    github: "#",
-  },
-  {
-    name: "Your Name 6",
-    role: "Your Role 6",
-    image: "/path/to/image6.jpg",
-    linkedin: "#",
-    github: "#",
+    name: "Mohammad Rafly Putra P",
+    role: "Software Engineer",
+    image: "/profile/rafly.jpg",
+    linkedin: "https://www.linkedin.com/in/rafly-pratama-0872741b1/",
+    github: "https://github.com/raflyprtm11",
   },
 ];
 
-const ProfileImage = ({ name }: { name: string }) => (
+const ProfileImage = ({ name, image }: { name: string; image: string }) => (
   <motion.div 
     {...createFadeAnimation('scale', 0.8, 0.2)}
     className="w-32 h-32 rounded-full bg-[#2A0A5E] overflow-hidden flex items-center justify-center absolute -top-16 border-4 border-white shadow-lg"
   >
     <Image 
-      src={UI_CONSTANTS.profileImage.path}
+      src={image}
       alt={`${name} profile`}
       width={UI_CONSTANTS.profileImage.size}
       height={UI_CONSTANTS.profileImage.size}
-      className="text-white"
+      className="w-full h-full object-cover rounded-full"
+      quality={95}
+      priority={false}
     />
   </motion.div>
 );
@@ -134,13 +136,13 @@ const SocialLinks = ({ linkedin, github }: Pick<TeamMember, 'linkedin' | 'github
   </motion.div>
 );
 
-const TeamMemberCard = ({ name, role, linkedin, github }: TeamMember) => {
+const TeamMemberCard = ({ name, role, image, linkedin, github }: TeamMember) => {
   return (
     <motion.div 
       {...createFadeAnimation('y', 30)}
       className="flex flex-col items-center pt-16 px-5 pb-5 rounded-lg bg-white shadow-md relative mt-12"
     >
-      <ProfileImage name={name} />
+      <ProfileImage name={name} image={image} />
 
       <motion.h3 
         {...createFadeAnimation('y', 0, 0.3)}
