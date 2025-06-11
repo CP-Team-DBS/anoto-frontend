@@ -7,161 +7,192 @@ import FlippableCard from "@/components/test/flippable-card";
 import TestFooter from "../test-footer";
 import { ArrowLeft } from "lucide-react";
 
-interface EmotionData {
+type AnxietyLevel = 'normal' | 'anxious_light' | 'anxious_moderate' | 'anxious_severe';
+
+interface TestResult {
   result: string;
   description: string;
-  dominantEmotion: string;
-  color: string;
+  level: AnxietyLevel;
 }
 
-type EmotionMap = {
-  [key: string]: EmotionData;
+interface TestInsightPageProps {
+  testResult?: TestResult;
 }
 
-const EMOTIONS: EmotionMap = {
-  anxious: {
-    result: "Cemas Ringan",
-    description: "Kadang kamu merasa tegang atau khawatir, tapi masih bisa berfungsi dengan normal dalam aktivitas harian.",
-    dominantEmotion: "Gelisah",
-    color: "#FAA916"
+interface LevelConfig {
+  readonly color: string;
+  readonly svgPath: string;
+}
+
+const ANXIETY_LEVELS = {
+  NORMAL: 'normal',
+  LIGHT: 'anxious_light', 
+  MODERATE: 'anxious_moderate',
+  SEVERE: 'anxious_severe'
+} as const;
+
+const ANXIETY_LEVEL_CONFIG: Record<AnxietyLevel, LevelConfig> = {
+  [ANXIETY_LEVELS.NORMAL]: {
+    color: "#3CC47C",
+    svgPath: "/test/normal.svg"
+  },
+  [ANXIETY_LEVELS.LIGHT]: {
+    color: "#FAA916", 
+    svgPath: "/test/ringan.svg"
+  },
+  [ANXIETY_LEVELS.MODERATE]: {
+    color: "#F25C54",
+    svgPath: "/test/sedang.svg"
+  },
+  [ANXIETY_LEVELS.SEVERE]: {
+    color: "#D72638",
+    svgPath: "/test/berat.svg"
   }
-  // Future emotions can be added here:
-  // happy: {
-  //   result: "Bahagia",
-  //   description: "Kamu sedang dalam kondisi emosi yang positif dan penuh semangat.",
-  //   dominantEmotion: "Senang",
-  //   color: "#4CAF50"
-  // },
-  // sad: {
-  //   result: "Sedih",
-  //   description: "Kamu mungkin sedang mengalami perasaan sedih atau kehilangan.",
-  //   dominantEmotion: "Murung",
-  //   color: "#2196F3"
-  // }
-};
+} as const;
 
-const CARD_STYLE = "w-[300px] h-[400px] md:w-[380px] md:h-[500px]";
+const LAYOUT_CONFIG = {
+  CARD: {
+    STYLE: "w-[300px] h-[400px] md:w-[380px] md:h-[500px]",
+    MAX_WIDTH: {
+      MOBILE: "300px",
+      DESKTOP: "380px"
+    }
+  },
+  IMAGE: {
+    SIZE: 180,
+    CLASSES: "w-44 h-44 md:w-48 md:h-48"
+  }
+} as const;
 
-const SOCIAL_LINKS = [
-  { platform: "Instagram", url: "https://www.instagram.com/", iconPath: "/social/instagram.svg" },
-  { platform: "X", url: "https://x.com/", iconPath: "/social/x.svg" }
-];
+const ROUTES = {
+  TEST_FORM: "/test/form",
+  JOURNAL: "/journal", 
+  TEST_HOME: "/test"
+} as const;
 
-function CardFront({ emotion }: { emotion: EmotionData }) {
-  const words = emotion.result.split(' ');
-  
+// Development fallback - will be replaced by backend data
+const FALLBACK_RESULT: TestResult = {
+  result: "Normal",
+  description: "Kamu tidak merasakan kecemasan yang signifikan. Terus jaga kesehatan mentalmu!",
+  level: ANXIETY_LEVELS.NORMAL
+} as const;
+
+function getAnxietyConfig(level: AnxietyLevel): LevelConfig {
+  return ANXIETY_LEVEL_CONFIG[level];
+}
+
+function getCardMaxWidth(): string {
+  return LAYOUT_CONFIG.CARD.STYLE.includes("md:w-[380px]") 
+    ? LAYOUT_CONFIG.CARD.MAX_WIDTH.DESKTOP 
+    : LAYOUT_CONFIG.CARD.MAX_WIDTH.MOBILE;
+}
+
+function TestResultCardFront({ testResult }: { testResult: TestResult }) {
+  const config = getAnxietyConfig(testResult.level);
+
   return (
     <div 
       className="flex flex-col items-center justify-center h-full w-full rounded-2xl text-white p-6"
-      style={{ backgroundColor: emotion.color }}
+      style={{ backgroundColor: config.color }}
     >
-      <span className="text-5xl md:text-6xl font-bold text-center leading-tight">
-        {words.length > 1 ? (
-          <>
-            {words[0]}<br/>{words.slice(1).join(' ')}
-          </>
-        ) : (
-          words[0]
-        )}
-      </span>
+      <div className="mb-6">
+        <Image 
+          src={config.svgPath}
+          alt={testResult.result}
+          width={LAYOUT_CONFIG.IMAGE.SIZE}
+          height={LAYOUT_CONFIG.IMAGE.SIZE}
+          className={LAYOUT_CONFIG.IMAGE.CLASSES}
+          priority
+        />
+      </div>
+      <h1 className="text-4xl md:text-5xl font-bold text-center leading-tight">
+        {testResult.result}
+      </h1>
     </div>
   );
 }
 
-function CardBack({ emotion }: { emotion: EmotionData }) {
+function TestResultCardBack({ testResult }: { testResult: TestResult }) {
+  const config = getAnxietyConfig(testResult.level);
+
   return (
-    <div className="flex flex-col items-center text-[#0E103D] text-center p-6 h-full">
-      <span 
-        className="text-5xl md:text-6xl font-bold text-center leading-tight mt-4"
-        style={{ color: emotion.color }}
+    <div className="flex flex-col items-center text-[#0E103D] text-center p-6 h-full justify-center">
+      <h2 
+        className="text-4xl md:text-5xl font-bold text-center leading-tight mb-8"
+        style={{ color: config.color }}
       >
-        {emotion.result}
-      </span>
+        {testResult.result}
+      </h2>
       
-      <div className="flex-grow flex items-center justify-center">
-        <p className="text-base leading-relaxed text-[#0E103D]">{emotion.description}</p>
-      </div>
-      
-      <div className="flex flex-col items-center mb-4">
-        <span className="text-xl font-bold mb-1 text-[#0E103D]">Emosi Dominan</span>
-        <span 
-          className="text-3xl md:text-4xl font-bold"
-          style={{ color: emotion.color }}
-        >
-          {emotion.dominantEmotion}
-        </span>
+      <div className="flex items-center justify-center px-4">
+        <p className="text-lg leading-relaxed text-[#0E103D]">
+          {testResult.description}
+        </p>
       </div>
     </div>
   );
 }
 
-function SocialSharing() {
+function NavigationLink({ href, children, className = "" }: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-white/80 text-base">Share ke:</span>
-      <div className="flex gap-3 text-white">
-        {SOCIAL_LINKS.map(link => (
-          <a 
-            key={link.platform}
-            href={link.url}
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hover:opacity-80 transition"
-          >
-            <Image 
-              src={link.iconPath}
-              alt={link.platform} 
-              width={32}
-              height={32}
-              className="w-8 h-8"
-            />
-          </a>
-        ))}
-      </div>
-    </div>
+    <Link 
+      href={href}
+      className={`text-white/80 hover:text-white transition-colors duration-200 text-base font-medium ${className}`}
+    >
+      {children}
+    </Link>
   );
 }
 
-function NavigationBar({ maxWidth }: { maxWidth: string }) {
+function TestNavigationBar({ maxWidth }: { maxWidth: string }) {
   return (
-    <div className="flex justify-between items-center w-full" style={{ maxWidth }}>
-      <Link href="/test/form" className="text-white/80 hover:text-white transition text-base font-medium">
+    <nav className="flex justify-between items-center w-full" style={{ maxWidth }}>
+      <NavigationLink href={ROUTES.TEST_FORM}>
         Tes Ulang
-      </Link>
-      <SocialSharing />
-    </div>
+      </NavigationLink>
+      <NavigationLink href={ROUTES.JOURNAL}>
+        Isi Jurnal
+      </NavigationLink>
+    </nav>
   );
 }
 
-function BackButton() {
+function BackNavigationButton() {
   return (
     <div className="w-full max-w-md mb-8 text-left">
-      <Link href="/test" className="inline-flex items-center text-white/80 hover:text-white transition">
+      <NavigationLink 
+        href={ROUTES.TEST_HOME}
+        className="inline-flex items-center"
+      >
         <ArrowLeft className="h-5 w-5 mr-2" />
         Kembali
-      </Link>
+      </NavigationLink>
     </div>
   );
 }
 
-export default function TestInsightPage() {
-  const currentEmotion = EMOTIONS.anxious;
-  const maxWidth = CARD_STYLE.includes("md:w-[380px]") ? "380px" : "300px";
+export default function TestInsightPage({ testResult }: TestInsightPageProps) {
+  const currentResult = testResult ?? FALLBACK_RESULT;
+  const maxWidth = getCardMaxWidth();
   
   return (
     <div className="flex flex-col min-h-screen bg-[#0E103D] text-white font-sans">
       <Container className="flex-grow flex flex-col items-center justify-center py-8">
-        <BackButton />
+        <BackNavigationButton />
 
-        <div className="flex justify-center items-center mb-8">
+        <main className="flex justify-center items-center mb-8">
           <FlippableCard
-            frontContent={<CardFront emotion={currentEmotion} />}
-            backContent={<CardBack emotion={currentEmotion} />}
-            className={CARD_STYLE}
+            frontContent={<TestResultCardFront testResult={currentResult} />}
+            backContent={<TestResultCardBack testResult={currentResult} />}
+            className={LAYOUT_CONFIG.CARD.STYLE}
           />
-        </div>
+        </main>
 
-        <NavigationBar maxWidth={maxWidth} />
+        <TestNavigationBar maxWidth={maxWidth} />
       </Container>
       <TestFooter />
     </div>
