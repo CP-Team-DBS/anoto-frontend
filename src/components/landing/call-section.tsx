@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {Card} from "@/components/ui/card";
 import Container from "../ui/container";
 import * as motion from "motion/react-client";
 
@@ -94,13 +94,11 @@ const FeatureCard = ({ title, description, bgColor, delay, index }: FeatureCardP
 			style={cardProps.dimensions}
 			className={cardProps.className}
 		>
-			<Card className={cardProps.className}>
-				<CardHeader className="pb-2 px-8">
-					<CardTitle className="text-2xl font-bold transform scale-90 origin-left">{title}</CardTitle>
-				</CardHeader>
-				<CardContent className="text-lg pt-0 px-8 pb-7">
-					{description}
-				</CardContent>
+			<Card className={`${cardProps.className} flex flex-col justify-center items-center text-center transform transition-all duration-700 hover:scale-105 hover:shadow-xl`}>
+				<div className="px-8 py-4 space-y-2">
+					<h3 className="text-2xl font-bold transform scale-90 animate-fade-in">{title}</h3>
+					<p className="text-lg animate-fade-in-delay">{description}</p>
+				</div>
 			</Card>
 		</motion.div>
 	);
@@ -109,7 +107,7 @@ const FeatureCard = ({ title, description, bgColor, delay, index }: FeatureCardP
 export default function CallSection() {
 	return (
 		<section className={`bg-[${UI_CONSTANTS.colors.background}] font-sans overflow-hidden`}>
-			<Container className="py-26">
+			<Container className="py-20">
 				<SectionHeading />
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 mt-16 place-items-center">
