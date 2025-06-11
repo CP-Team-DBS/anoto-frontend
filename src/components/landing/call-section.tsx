@@ -64,7 +64,7 @@ const SectionHeading = () => (
 	<>
 		<motion.h2
 			{...createAnimation('y', 50)}
-			className="text-5xl font-bold text-white text-center md:text-start"
+			className="text-5xl font-bold text-white text-center md:text-start transform scale-90 origin-center md:origin-left"
 		>
 			Kenapa Anoto?
 		</motion.h2>
@@ -96,7 +96,7 @@ const FeatureCard = ({ title, description, bgColor, delay, index }: FeatureCardP
 		>
 			<Card className={cardProps.className}>
 				<CardHeader className="pb-2 px-8">
-					<CardTitle className="text-2xl font-bold">{title}</CardTitle>
+					<CardTitle className="text-2xl font-bold transform scale-90 origin-left">{title}</CardTitle>
 				</CardHeader>
 				<CardContent className="text-lg pt-0 px-8 pb-7">
 					{description}
@@ -109,10 +109,10 @@ const FeatureCard = ({ title, description, bgColor, delay, index }: FeatureCardP
 export default function CallSection() {
 	return (
 		<section className={`bg-[${UI_CONSTANTS.colors.background}] font-sans overflow-hidden`}>
-			<Container className="py-16">
+			<Container className="py-26">
 				<SectionHeading />
 
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 mt-16 place-items-center">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 mt-16 place-items-center">
 					{FEATURES.map((feature, index) => (
 						<FeatureCard key={index} {...feature} index={index} />
 					))}

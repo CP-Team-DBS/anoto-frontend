@@ -30,7 +30,7 @@ const IntroHeader = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={ANIMATION_CONFIG.viewport}
         transition={{ duration: 0.6, ease: ANIMATION_CONFIG.ease }}
-        className="text-5xl font-bold md:w-96 leading-14"
+        className="text-5xl font-bold md:w-96 leading-14 scale-90"
       >
         Cuma <span className="text-secondary">3 Menit</span> Buat Kenal Isi
         Kepala Sendiri
@@ -41,7 +41,7 @@ const IntroHeader = () => (
         whileInView={{ opacity: 1, x: 0 }}
         viewport={ANIMATION_CONFIG.viewport}
         transition={{ duration: 0.6, delay: 0.2, ease: ANIMATION_CONFIG.ease }}
-        className="text-2xl flex items-center h-full"
+        className="text-lg flex items-center h-full"
       >
         Dengan beberapa pertanyaan ringan, kamu bisa mengetahui apakah
         stresmu masih dalam batas wajar atau perlu perhatian lebih.
@@ -93,7 +93,7 @@ const ContentItem = ({ imageUrl, title, description, imageRight = false }: Conte
         transition={{ duration: 0.6, delay: textAnimation.delay, ease: ANIMATION_CONFIG.ease }}
         className="w-full basis-2/4 text-center md:text-start"
       >
-        <h6 className="text-4xl font-bold">{title}</h6>
+        <h6 className="text-4xl font-bold scale-90 origin-center md:origin-left">{title}</h6>
         <p className="mt-5 text-lg">{description}</p>
       </motion.div>
 
@@ -122,14 +122,14 @@ function QuoteSection({ quote, author }: QuoteSectionProps) {
     <div className="flex flex-col items-center mt-20">
       <motion.p
         {...createAnimation('y', 30, 0.5)}
-        className={`text-3xl font-bold text-[${UI_CONSTANTS.colors.primary}] text-center max-w-3xl`}
+        className={`text-3xl font-bold text-[${UI_CONSTANTS.colors.primary}] text-center max-w-3xl scale-90`}
       >
         &ldquo;{quote}&rdquo;
       </motion.p>
       
       <motion.span
         {...createAnimation('y', 20, 0.6)}
-        className={`text-3xl italic text-[${UI_CONSTANTS.colors.accent}] mt-8`}
+        className={`text-3xl italic text-[${UI_CONSTANTS.colors.accent}] mt-8 scale-90`}
       >
         -{author}
       </motion.span>

@@ -421,7 +421,7 @@ export default function TestimonialSection() {
   }
 
   return (
-    <section className="bg-[#2D234F] py-16 md:py-24 font-sans text-white relative overflow-hidden">
+    <section className="bg-[#0E103D] py-16 md:py-24 font-sans text-white relative overflow-hidden">
       <Container className="relative z-10">
         <header className="mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-center">Testimoni</h2>

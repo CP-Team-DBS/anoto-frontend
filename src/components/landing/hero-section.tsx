@@ -58,10 +58,11 @@ export default function HeroSection() {
                 delay: 0.6,
                 ease: "easeOut",
               }}
+              className="flex justify-center md:justify-start transform scale-110"
             >
               <Button
                 size="lg"
-                className="bg-accent rounded-full mx-auto md:mx-0 hover:scale-105 transition-transform"
+                className="bg-accent rounded-full hover:scale-105 hover:shadow-xl hover:bg-accent/80 hover:brightness-110 transition-all duration-300 ease-out text-base px-6 py-3"
                 asChild
               >
                 <Link href="/test">Mulai Tes Sekarang</Link>
@@ -84,7 +85,7 @@ export default function HeroSection() {
               alt="Hero Image"
               width={400}
               height={500}
-              className="w-[40%] md:w-[90%] mx-auto"
+              className="w-[40%] md:w-[90%] mx-auto md:ml-auto md:mr-0"
             />
           </motion.div>
         </div>

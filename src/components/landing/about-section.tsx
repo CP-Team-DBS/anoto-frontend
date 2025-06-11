@@ -70,8 +70,8 @@ const teamMembers: TeamMember[] = [
     name: "Ahmad Irsyadul 'Ibad",
     role: "Software Engineer",
     image: "/profile/profile-user.svg",
-    linkedin: "#",
-    github: "#",
+    linkedin: "https://linkedin.com/in/irsyadulibad",
+    github: "https://github.com/irsyadulibad",
   },
   {
     name: "Muhammad Rivqi Al Varras",
