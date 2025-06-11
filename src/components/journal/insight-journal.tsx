@@ -1,5 +1,6 @@
 import Container from "@/components/ui/container";
 import Link from "next/link";
+import Image from "next/image"; 
 import { Card } from "@/components/ui/card";
 import TestFooter from "@/components/test-footer";
 
@@ -38,10 +39,13 @@ const EmotionCard = ({ emotion }: { emotion: string }) => {
     >
       <span className="font-bold text-xl mt-4 text-white">{emotion}</span>
       <div className="w-24 h-24 flex items-center justify-center mb-4">
-        <img 
+        <Image
           src={`/illusts/${emotionStyle.svgFile}`}
           alt={`${emotion} emotion`}
-          className="w-full h-full"
+          width={96}
+          height={96}
+          className="w-full h-full object-contain"
+          priority
         />
       </div>
     </Card>
