@@ -11,7 +11,7 @@ export default function Home() {
       <HeroSection />
       <IntroSection />
       <CallSection />
-      <StatsSection anxietyPercentage={75} /> 
+      <StatsSection /> 
       <TestimonialSection />
       <AboutSection />
     </>
