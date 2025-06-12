@@ -6,7 +6,7 @@ import Footer from './footer';
 export default function ConditionalFooter() {
   const pathname = usePathname();
   
-  const testRoutes = ['/test/form', '/test/insight', '/journal/insight'];
+  const testRoutes = ['/test/form', '/test/insight'];
   const isTestRoute = testRoutes.some(route => 
     pathname === route || pathname.startsWith(route)
   );

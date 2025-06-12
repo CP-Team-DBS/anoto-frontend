@@ -196,13 +196,6 @@ export default function JournalForm() {
 
         <div className="flex gap-4">
           <Button
-            ref={submitBtnRef}
-            type="submit"
-            className="bg-yellow-400 hover:bg-yellow-500 rounded-full hover:scale-105 transition-transform w-[140px] h-[45px] text-md flex items-center justify-center text-white font-regular"
-          >
-            Simpan Jurnal
-          </Button>
-          <Button
             className="bg-primary hover:bg-gray-400 rounded-full hover:scale-105 transition-transform w-[140px] h-[45px] text-md flex items-center justify-center text-white font-regular"
             asChild
           >

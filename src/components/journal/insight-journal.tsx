@@ -2,7 +2,6 @@ import Container from "@/components/ui/container";
 import Link from "next/link";
 import Image from "next/image"; 
 import { Card } from "@/components/ui/card";
-import TestFooter from "@/components/test-footer";
 
 
 interface Emotion {
@@ -118,9 +117,6 @@ export default function InsightPage() {
         {/* Suggestions Section */}
         <SuggestionsList suggestions={insights.suggestions} />
       </Container>
-
-      {/* Test Footer */}
-      <TestFooter />
     </div>
   );
 }

@@ -13,7 +13,7 @@ export default function IntroJournal() {
           </p>
           <div className="flex justify-center">
             <Button
-              className="bg-accent rounded-full hover:scale-105 transition-transform w-[260px] h-[70px] text-2xl flex items-center justify-center"
+              className="bg-accent rounded-full hover:scale-105 transition-transform px-4 py-3 text-sm font-medium md:text-base md:px-5 md:py-3 w-auto h-auto flex items-center justify-center shadow-md"
               asChild
             >
               <Link href="/journal/form">Mulai Menulis →</Link>
