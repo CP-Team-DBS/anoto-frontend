@@ -8,6 +8,8 @@ interface Testimonial {
   name: string;
   text: string;
   rating: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface TestimonialCardProps {
@@ -33,7 +35,6 @@ const TESTIMONIAL_CONFIG = {
   },
   UI: {
     STAR_COUNT: 5,
-    MOCK_DELAY: 500,
   },
 } as const;
 
@@ -44,88 +45,26 @@ const UI_STYLES = {
   },
 } as const;
 
-const TESTIMONIAL_DATA: Testimonial[] = [
-  {
-    "id": 1,
-    "name": "Sarah P***",
-    "text": "Anoto bukan cuma aplikasi, tapi ruang aman buat saya yang sedang berproses menghadapi kecemasan.",
-    "rating": 5
-  },
-  {
-    "id": 2,
-    "name": "Ahmad R***",
-    "text": "Dengan Anoto, saya belajar memahami perasaan saya lebih dalam. Fitur analisisnya sangat membantu.",
-    "rating": 5
-  },
-  {
-    "id": 3,
-    "name": "Maya S***",
-    "text": "Menulis di Anoto membantu saya menemukan pola-pola emosi yang tidak saya sadari sebelumnya.",
-    "rating": 4
-  },
-  {
-    "id": 4,
-    "name": "Budi S***",
-    "text": "Interface yang sederhana tapi powerful. Rekomendasi yang diberikan selalu tepat sasaran.",
-    "rating": 5
-  },
-  {
-    "id": 5,
-    "name": "Rina D***",
-    "text": "Anoto membantu saya mengelola stress dengan lebih baik. Sekarang saya lebih tenang menghadapi hari.",
-    "rating": 4
-  },
-  {
-    "id": 6,
-    "name": "Doni P***",
-    "text": "Fitur tracking mood-nya sangat berguna. Saya jadi tahu kapan saya butuh istirahat lebih.",
-    "rating": 5
-  },
-  {
-    "id": 7,
-    "name": "Fitri A***",
-    "text": "Saya merasa tidak sendirian lagi setelah menggunakan Anoto. Komunitasnya sangat mendukung.",
-    "rating": 5
-  },
-  {
-    "id": 8,
-    "name": "Agus W***",
-    "text": "Awalnya ragu, tapi ternyata Anoto sangat mudah digunakan dan dampaknya terasa sekali untuk kesehatan mental saya.",
-    "rating": 4
-  },
-  {
-    "id": 9,
-    "name": "Cindy K***",
-    "text": "Ini aplikasi yang saya cari-cari. Simpel, privat, dan benar-benar fokus membantu pengguna merasa lebih baik.",
-    "rating": 5
-  },
-  {
-    "id": 10,
-    "name": "Rian H***",
-    "text": "Latihan pernapasan dan meditasi singkat di Anoto jadi andalan saya untuk meredakan panik. Sangat praktis!",
-    "rating": 5
-  },
-  {
-    "id": 11,
-    "name": "Dewi L***",
-    "text": "Menjadikan Anoto sebagai jurnal harian adalah keputusan terbaik. Saya jadi lebih kenal dengan diri sendiri.",
-    "rating": 5
-  },
-  {
-    "id": 12,
-    "name": "Fajar N***",
-    "text": "Sangat merekomendasikan Anoto untuk siapa saja yang ingin memulai perjalanan self-care tapi bingung mulai dari mana.",
-    "rating": 5
-  }
-];
 
 async function fetchTestimonials(): Promise<Testimonial[]> {
-  // TODO: Replace with actual API call
-  // const response = await fetch('/api/testimonials');
-  // return response.json();
-  
-  await new Promise(resolve => setTimeout(resolve, TESTIMONIAL_CONFIG.UI.MOCK_DELAY));
-  return TESTIMONIAL_DATA;
+  try {
+    const response = await fetch('/api/testimonials');
+    
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.error === false && data.data?.testimonials) {
+      return data.data.testimonials;
+    } else {
+      throw new Error(data.message || "Invalid response format");
+    }
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
+    return [];
+  }
 }
 
 function StarRating({ rating }: StarRatingProps) {

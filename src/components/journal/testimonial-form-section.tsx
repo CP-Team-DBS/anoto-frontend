@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Container from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 
@@ -95,8 +96,63 @@ function ValidationAlert({ isVisible, message, onClose }: {
   );
 }
 
+// Success alert component (green, centered)
+function SuccessAlert({ isVisible, message, onClose }: { 
+  isVisible: boolean; 
+  message: string; 
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    const timer = setTimeout(onClose, 5000);
+    return () => clearTimeout(timer);
+  }, [isVisible, onClose]);
+  
+  if (!isVisible) return null;
+  
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Semi-transparent backdrop */}
+      <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+      
+      {/* Success alert card */}
+      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md z-10 transform scale-105 transition-all duration-300 border-t-8 border-green-500">
+        <div className="flex flex-col items-center text-center">
+          {/* Success icon */}
+          <div className="bg-green-100 p-3 rounded-full mb-4">
+            <svg className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={3} 
+                d="M5 13l4 4L19 7" 
+              />
+            </svg>
+          </div>
+          
+          {/* Success title */}
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">Berhasil!</h3>
+          
+          {/* Success message */}
+          <p className="text-lg text-gray-600 mb-6">{message}</p>
+          
+          {/* Indicator */}
+          <div className="mt-2 flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse delay-150"></div>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse delay-300"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ===== MAIN COMPONENT =====
 export default function TestimonialFormSection() {
+  const router = useRouter();
+  
   // State management
   const [formData, setFormData] = useState<TestimonialFormData>({
     name: "",
@@ -111,6 +167,7 @@ export default function TestimonialFormSection() {
   });
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   
   // Event handlers
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -151,7 +208,7 @@ export default function TestimonialFormSection() {
   };
   
   // Form submission handler
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     const missingFields: string[] = [];
@@ -171,19 +228,49 @@ export default function TestimonialFormSection() {
     
     // Success path - form is valid
     try {
-      // TODO: Replace with actual API submission
-      console.log(formData);
-      alert("Testimoni berhasil dikirim!");
-      
-      // Reset form
-      setFormData({ name: "", testimonial: "", rating: 0 });
-      setErrors({
-        name: undefined,
-        testimonial: undefined,
-        rating: undefined
+      // Use our local API route instead of the external one
+      const response = await fetch('/api/testimonials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          text: formData.testimonial,
+          rating: formData.rating
+        })
       });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (result.error === false) {
+        // Set success state BEFORE showing the alert
+        setIsSuccess(true);
+        setShowAlert(true);
+        setAlertMessage("Testimoni berhasil dikirim! Mengarahkan ke halaman utama...");
+        
+        // Reset form
+        setFormData({ name: "", testimonial: "", rating: 0 });
+        setErrors({
+          name: undefined,
+          testimonial: undefined,
+          rating: undefined
+        });
+        
+        // Redirect to home page after a short delay to show the message
+        setTimeout(() => {
+          router.push('/');
+        }, 2000);
+      } else {
+        throw new Error(result.message || "Unknown error occurred");
+      }
     } catch (error) {
       console.error("Failed to submit testimonial:", error);
+      setIsSuccess(false);
       setAlertMessage("Gagal mengirim testimoni. Silakan coba lagi.");
       setShowAlert(true);
     }
@@ -195,12 +282,23 @@ export default function TestimonialFormSection() {
 
   return (
     <section className="min-h-screen flex items-center justify-center py-16 bg-gradient-to-br from-purple-50 to-indigo-100 text-[#0E103D] relative">
-      {/* Validation Alert */}
-      <ValidationAlert 
-        isVisible={showAlert} 
-        message={alertMessage} 
-        onClose={() => setShowAlert(false)} 
-      />
+      {/* Regular validation alert (for errors) */}
+      {!isSuccess && (
+        <ValidationAlert 
+          isVisible={showAlert} 
+          message={alertMessage} 
+          onClose={() => setShowAlert(false)} 
+        />
+      )}
+      
+      {/* Success alert (green, centered) */}
+      {isSuccess && (
+        <SuccessAlert 
+          isVisible={showAlert} 
+          message={alertMessage} 
+          onClose={() => setShowAlert(false)} 
+        />
+      )}
       
       <Container className="max-w-xl">
         <header className="text-center mb-12">
@@ -221,9 +319,6 @@ export default function TestimonialFormSection() {
                 value={formData.name}
                 onChange={handleChange}
               />
-              <p className={STYLES.hint}>
-                Kami menjaga privasi Anda. Nama pengirim akan kami samarkan.
-              </p>
             </div>
 
             {/* Rating Field */}
