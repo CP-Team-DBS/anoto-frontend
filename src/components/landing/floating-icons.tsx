@@ -32,7 +32,7 @@ export default function FloatingIcons() {
         💭
       </motion.div>
       <motion.div
-        className="absolute bottom-40 left-1/4 text-2xl"
+        className="hidden md:block absolute bottom-40 left-1/4 text-2xl"
         animate={{
           x: [0, 15, 0],
           rotate: [0, 5, 0],

@@ -31,7 +31,7 @@ export default function HeroSection() {
                 type: "spring",
                 bounce: 0.4,
               }}
-              className="text-6xl font-bold"
+              className="text-3xl md:text-6xl font-bold"
             >
               Ayo Kenali Kecemasanmu, Mulai dari sini
             </motion.h2>
@@ -58,7 +58,7 @@ export default function HeroSection() {
                 delay: 0.6,
                 ease: "easeOut",
               }}
-              className="flex justify-center md:justify-start transform scale-110"
+              className="flex w-full justify-center md:justify-start transform scale-110 md:scale-100"
             >
               <Button
                 size="lg"
