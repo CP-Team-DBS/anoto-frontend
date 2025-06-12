@@ -301,12 +301,13 @@ export default function TestimonialFormSection() {
       )}
       
       <Container className="max-w-xl">
+        
         <header className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-[#2D234F] mb-4">Tulis Testimoni Kamu</h2>
           <p className="text-lg text-gray-600">Puas menggunakan Anoto? Tulis pengalamanmu di sini</p>
         </header>
 
-        <div className="bg-white rounded-xl shadow-2xl p-8 md:p-10 border border-gray-100">
+        <div className="bg-white rounded-xl shadow-xl p-8 md:p-8 border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
             <div>
@@ -346,10 +347,10 @@ export default function TestimonialFormSection() {
             </div>
 
             {/* Submit Button */}
-            <div className="text-center pt-4">
+            <div className="text-center">
               <Button
                 type="submit"
-                className="w-full md:w-auto bg-[#2D234F] hover:bg-[#1E193C] text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#2D234F] focus:ring-offset-2"
+                className="w-full bg-[#8B5CF6] hover:bg-[#0E103D] text-white text-md font-semibold py-5 px-8 rounded-lg transition-all duration-300"
               >
                 Kirim
               </Button>

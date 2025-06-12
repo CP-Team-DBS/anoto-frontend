@@ -54,9 +54,15 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="bg-primary text-white shadow-sm font-sans py-4 sticky top-0 z-50">
+    <nav className="bg-primary text-white font-sans py-5 sticky top-0 z-50">
       <Container className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Anoto</h1>
+        <Link href="/">
+          <img
+            src="/illusts/logo_anoto_white.svg"
+            alt="Anoto Logo"
+            className="max-w-[85px] w-full h-auto"
+          />
+        </Link>
 
         <NavigationMenu>
           <NavigationMenuList className="gap-6">

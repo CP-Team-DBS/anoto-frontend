@@ -16,12 +16,17 @@ const EMOTIONS = [
 ];
 
 const DUMMY_PROMPT_RESPONSES: Record<string, string[]> = {
-	"Anxiety": ["Mood aku naik turun seharian."],
-  "Fear": ["Aku takut menghadapi situasi yang tidak pasti."],
-  "Nervousness": ["Aku gugup saat berbicara di depan umum."],
-  "Sadness": ["Aku merasa sedih saat teringat kejadian itu."],
-  "Shame": ["Aku merasa malu karena kesalahan yang aku buat."],
-  "Suffering": ["Aku sulit fokus karena masalah yang kuhadapi."],
+	"Anxiety": ["Mood aku naik turun seharian.", "Gila, overthinking aku kumat lagi, cemas banget mikirin hal-hal yang belum terjadi tapi udah bikin gelisah.", "Kadang rasanya kayak ada beban berat di dada, bikin aku gugup dan susah bernapas, resah banget.", "Sering tiba-tiba panik tanpa sebab, rasanya pengen lari aja dari kenyataan yang bikin khawatir."],
+
+	"Fear": ["Aku takut menghadapi situasi yang tidak pasti.", "Aku sering takut sama masa depan yang nggak pasti, rasanya kayak lagi jalan di kegelapan yang mengerikan.", "Nggak berani buka notifikasi dari dosen, ngeri kalau isinya berita buruk yang bikin ketakutan.", "Melihat berita-berita di TV, kadang bikin aku was-was sendiri sama dunia ini yang menakutkan."],
+
+	"Nervousness": ["Aku gugup saat berbicara di depan umum.", "Setiap mau ngomong di depan umum, tangan langsung gemetaran dan suara jadi pelan saking gugupnya.", "Mau ketemu orang baru aja, perut udah mules dan keringat dingin, bikin grogi banget.", "Kalau lagi nge-chat crush, rasanya deg-degan banget sampai salah ketik terus dan jadi gelisah."],
+
+	"Sadness": ["Aku merasa sedih saat teringat kejadian itu.", "Hari ini rasanya sedih banget, nggak tahu kenapa pengen nangis dan galau aja.", "Melihat postingan teman-teman yang bahagia, kadang bikin aku kecewa dan sedih sendiri, rasanya pilu.", "Sering merasa sendirian dan putus asa, padahal di sekitar banyak orang yang nggak tahu kesedihanku."],
+
+	"Shame": ["Aku merasa malu karena kesalahan yang aku buat.", "Sering flashback ke momen memalukan di masa lalu, rasanya pengen ngilang aja dari bumi saking malunya dan bersalah.", "Kadang aku ngerasa tak berharga dan malu sama diri sendiri karena belum bisa jadi seperti yang diharapkan.", "Kalau ingat kesalahan yang pernah aku buat, rasanya menyesal dan memalukan banget, penuh aib."],
+
+	"Suffering": ["Aku sulit fokus karena masalah yang kuhadapi.", "Aku merasa lagi berjuang banget sama hidup, rasanya lelah dan menderita, pengen nyerah dari beban ini.", "Banyak banget masalah yang datang barengan, rasanya kayak nggak ada habisnya, ini sakit banget.", "Setiap bangun tidur, rasanya udah tertekan duluan ngadepin hari ini yang penuh kesulitan."],
 };
 
 export default function JournalForm() {
@@ -118,7 +123,7 @@ export default function JournalForm() {
 			}
 		} catch (error) {
 			console.error("Error submitting journal:", error);
-			
+
 			// Create fallback data
 			const fallbackData = {
 				emotions: [
@@ -133,7 +138,7 @@ export default function JournalForm() {
 					"Hubungi orang terdekat yang Anda percayai dan bicarakan perasaan Anda. Jangan ragu untuk meminta dukungan."
 				]
 			};
-			
+
 			// Still save fallback data so insights can be displayed
 			localStorage.setItem("journalResponse", JSON.stringify(fallbackData));
 			router.push("/journal/insight");
@@ -154,7 +159,7 @@ export default function JournalForm() {
 
 	return (
 		<div className="w-full max-w-screen-lg mx-auto bg-[#FFFFFF] p-8 rounded-lg border-none text-[#0E103D]">
-			<div className="mb-4 relative z-10">
+			<div className="mb-6 flex items-center justify-between relative z-10">
 				<Link
 					href="/journal"
 					className="flex items-center text-gray-600 hover:text-[#0E103D] transition text-lg"
@@ -175,7 +180,12 @@ export default function JournalForm() {
 					</svg>
 					Kembali
 				</Link>
+
+				<h2 className="text-sm sm:text-base md:text-lg text-primary font-medium text-left leading-snug">
+					Tulis ceritamu, lalu pahami kecemasanmu dan temukan insight dari setiap jurnalmu.
+				</h2>
 			</div>
+
 
 			<div className="flex gap-4 items-start relative">
 				<div className="w-[260px] min-h-[400px] bg-white rounded-xl border-black p-4 shadow-[0_0_7px_rgba(0,0,0,0.1)]">
@@ -212,11 +222,10 @@ export default function JournalForm() {
 										key={emotion}
 										data-emotion
 										onClick={() => toggleEmotion(emotion)}
-										className={`px-3 py-1 text-sm rounded-full border transition ${
-											isSelected
-												? "bg-purple-100 text-purple-700 border-purple-300 hover:bg-purple-200"
-												: "bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200"
-										}`}
+										className={`px-3 py-1 text-sm rounded-full border transition ${isSelected
+											? "bg-purple-100 text-purple-700 border-purple-300 hover:bg-purple-200"
+											: "bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200"
+											}`}
 									>
 										{emotion}
 									</button>
