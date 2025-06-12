@@ -71,6 +71,8 @@ function useAnxietyTestForm() {
       7: "merasa_takut_seolah_olah_sesuatu_buruk_akan_terjadi"
     };
 
+    // Return formatted data for the proxy API route
+    // The route will transform it to the required API format
     const formattedData: Record<string, string> = {};
     
     Object.entries(userAnswers).forEach(([questionId, answer]) => {
@@ -89,7 +91,6 @@ function useAnxietyTestForm() {
     try {
       const formattedData = formatAnswersForApi();
       
-      // Use the API route /predict
       const response = await fetch('/api/predict', {
         method: 'POST',
         headers: {

@@ -36,6 +36,7 @@ const ANXIETY_LEVELS = {
 // Mapping API anxiety levels to our application's internal levels
 const API_LEVEL_MAPPING: Record<string, AnxietyLevel> = {
   "Normal": ANXIETY_LEVELS.NORMAL,
+  "Rendah": ANXIETY_LEVELS.LIGHT,
   "Ringan": ANXIETY_LEVELS.LIGHT,
   "Sedang": ANXIETY_LEVELS.MODERATE,
   "Berat": ANXIETY_LEVELS.SEVERE,

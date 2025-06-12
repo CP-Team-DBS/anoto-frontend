@@ -3,14 +3,19 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    
+    const values = Object.entries(body).map(([question, answer]) => ({
+      question,
+      answer
+    }));
 
-    const response = await fetch('https://gad7.anoto.my.id/predict', {
+    const response = await fetch('https://backend.anoto.my.id/test', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ values }),
     });
 
     if (!response.ok) {
@@ -18,16 +23,17 @@ export async function POST(request: Request) {
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    
+    if (data && data.error === false && data.data && data.data.result) {
+      return NextResponse.json(data.data.result);
+    } else {
+      throw new Error('Invalid API response format');
+    }
   } catch (error) {
     console.error('API proxy error:', error);
-    
-    // // Return a fallback response for development
-    // return NextResponse.json({
-    //   total_score: 5,
-    //   anxiety_level: "Ringan",
-    //   anxiety_label_encoded: 2,
-    //   message: "Tingkat kecemasan Anda tergolong ringan. Perlu mulai memperhatikan tanda-tanda stres dan mengelolanya dengan baik."
-    // }, { status: 200 });
+    return NextResponse.json({
+      error: true,
+      message: 'Failed to process test results',
+    }, { status: 500 });
   }
 }
