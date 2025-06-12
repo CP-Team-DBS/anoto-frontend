@@ -7,7 +7,7 @@ import Container from "@/components/ui/container";
 import FlippableCard from "@/components/test/flippable-card";
 import TestFooter from "../test-footer";
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 type AnxietyLevel = 'normal' | 'anxious_light' | 'anxious_moderate' | 'anxious_severe';
 
@@ -17,9 +17,6 @@ interface TestResult {
   level: AnxietyLevel;
 }
 
-interface TestInsightPageProps {
-  testResult?: TestResult;
-}
 
 interface LevelConfig {
   readonly color: string;
@@ -87,7 +84,7 @@ const FALLBACK_RESULT: TestResult = {
   level: ANXIETY_LEVELS.NORMAL
 } as const;
 
-function useTestResults() {
+function TestInsightContent() {
   const searchParams = useSearchParams();
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   
@@ -106,7 +103,21 @@ function useTestResults() {
     }
   }, [searchParams]);
   
-  return testResult || FALLBACK_RESULT;
+  const currentResult = testResult || FALLBACK_RESULT;
+  const maxWidth = getCardMaxWidth();
+
+  return (
+    <>
+      <main className="flex justify-center items-center mb-8">
+        <FlippableCard
+          frontContent={<TestResultCardFront testResult={currentResult} />}
+          backContent={<TestResultCardBack testResult={currentResult} />}
+          className={LAYOUT_CONFIG.CARD.STYLE}
+        />
+      </main>
+      <TestNavigationBar maxWidth={maxWidth} />
+    </>
+  );
 }
 
 function getAnxietyConfig(level: AnxietyLevel): LevelConfig {
@@ -207,25 +218,14 @@ function BackNavigationButton() {
   );
 }
 
-export default function TestInsightPage({ testResult: propTestResult }: TestInsightPageProps) {
-  const apiTestResult = useTestResults();
-  const currentResult = propTestResult ?? apiTestResult;
-  const maxWidth = getCardMaxWidth();
-  
+export default function TestInsightPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#0E103D] text-white font-sans">
       <Container className="flex-grow flex flex-col items-center justify-center py-8">
         <BackNavigationButton />
-
-        <main className="flex justify-center items-center mb-8">
-          <FlippableCard
-            frontContent={<TestResultCardFront testResult={currentResult} />}
-            backContent={<TestResultCardBack testResult={currentResult} />}
-            className={LAYOUT_CONFIG.CARD.STYLE}
-          />
-        </main>
-
-        <TestNavigationBar maxWidth={maxWidth} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <TestInsightContent />
+        </Suspense>
       </Container>
       <TestFooter />
     </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Suspense } from 'react';
 import Container from "@/components/ui/container";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -342,7 +342,8 @@ function TestQuestionCard({
   );
 }
 
-export default function AnxietyTestForm() {
+function FormTestContent() {
+  // Use the hook instead of duplicating its implementation
   const {
     currentStep,
     currentQuestion,
@@ -354,19 +355,27 @@ export default function AnxietyTestForm() {
   } = useAnxietyTestForm();
 
   return (
+    <TestQuestionCard 
+      question={currentQuestion}
+      currentStep={currentStep}
+      totalSteps={QUESTIONS.length}
+      selectedAnswer={userAnswers[currentQuestion.id]}
+      onAnswerSelect={selectAnswer}
+      onNavigate={navigateStep}
+      isLastStep={isLastQuestion}
+      isSubmitting={isProcessing}
+    />
+  );
+}
+
+export default function AnxietyTestForm() {
+  return (
     <div className="flex flex-col min-h-screen bg-[#0E103D] text-white font-sans">
       <Container className="flex-grow flex flex-col items-center justify-center py-8">
         <TestNavigationHeader />
-        <TestQuestionCard 
-          question={currentQuestion}
-          currentStep={currentStep}
-          totalSteps={QUESTIONS.length}
-          selectedAnswer={userAnswers[currentQuestion.id]}
-          onAnswerSelect={selectAnswer}
-          onNavigate={navigateStep}
-          isLastStep={isLastQuestion}
-          isSubmitting={isProcessing}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <FormTestContent />
+        </Suspense>
       </Container>
       <TestFooter />
     </div>
