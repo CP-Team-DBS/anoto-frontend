@@ -75,7 +75,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Ahmad Irsyadul 'Ibad",
     role: "Software Engineer",
-    image: "/profile/profile-user.svg",
+    image: "/profile/irsyadulibad.png",
     linkedin: "https://linkedin.com/in/irsyadulibad",
     github: "https://github.com/irsyadulibad",
   },
@@ -190,7 +190,7 @@ const TeamSectionHeader = () => (
 );
 
 const TeamGrid = () => (
-  <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+  <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-6 max-w-5xl mx-auto">
     {teamMembers.map((member, index) => (
       <TeamMemberCard key={index} {...member} />
     ))}
