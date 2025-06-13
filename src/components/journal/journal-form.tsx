@@ -295,7 +295,7 @@ export default function JournalForm() {
           )}
         </div>
 
-        <div className="flex-1 bg-white rounded-xl p-4 shadow-[0_0_7px_rgba(0,0,0,0.1)] min-h-[400px]">
+        <div className="flex-1 bg-white rounded-xl p-4 shadow-[0_0_7px_rgba(0,0,0,0.1)] min-h-[400px] w-full">
           <textarea
             ref={textareaRef}
             rows={10}

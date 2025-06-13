@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Container from "@/components/ui/container";
 import Link from "next/link";
 import Image from "next/image";
+import { scoreToText } from "@/lib/utils";
 
 interface EmotionDetails {
   name: string;
@@ -24,7 +25,7 @@ const fullEmotionDetails: Record<string, Omit<EmotionDetails, "name">> = {
 // EmotionCard component to display emotion image styled card
 const EmotionCard = ({ emotion }: { emotion: EmotionDetails }) => {
   return (
-    <div className="flex flex-col items-center justify-center w-40 h-48 text-white rounded-xl mt-10">
+    <div className="flex flex-col items-center justify-center w-40 h-48 text-white rounded-xl">
       <Image
         src={`/journal/${emotion.svgFile}`}
         alt={`${emotion.name} emotion`}
@@ -155,7 +156,7 @@ export default function InsightPage() {
         {/* Insight Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-2">
-            Insight Journaling
+            Hasil Analisis Tulisan Kamu
           </h1>
           <p className="text-white/70 text-lg">
             Tiga Emosi dominan kamu hari ini
@@ -165,13 +166,15 @@ export default function InsightPage() {
         {/* Emotion Cards - pure SVG display within cards */}
         <div className="flex flex-col md:flex-row justify-center items-center gap-8 mb-12">
           {insightData.dominantEmotions.slice(0, 3).map((emotion) => (
-            <EmotionCard key={emotion.name} emotion={emotion} />
+            <div key={emotion.name}>
+              <EmotionCard emotion={emotion} />
+              <p className="mt-9 text-center">{scoreToText(emotion.score)}</p>
+            </div>
           ))}
         </div>
 
         {/* Descriptive Paragraph */}
-        <div className="text-center text-xl max-w-2xl mx-auto mb-12">
-          <p>{insightData.insight}</p>
+        <div className="text-center text-xl max-w-2xl mx-auto mb-12 mt-14">
           {insightData.validation && (
             <p className="mt-4 text-xl">{insightData.validation}</p>
           )}
