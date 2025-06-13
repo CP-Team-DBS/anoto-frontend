@@ -1,10 +1,10 @@
 import Image from "next/image";
 import * as motion from "motion/react-client";
-import Container from "@/components/ui/container"; 
+import Container from "@/components/ui/container";
 
 export default function HeroJournal() {
   return (
-    <section className="bg-primary text-white min-h-[calc(100vh-65px)] flex items-center py-16 relative overflow-hidden">
+    <section className="bg-primary text-white min-h-[calc(100vh-65px)] flex items-center relative overflow-hidden py-10 md:py-16">
       <Container size="sm">
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-col items-start justify-center gap-10 text-center md:text-start">
@@ -26,7 +26,7 @@ export default function HeroJournal() {
                 type: "spring",
                 bounce: 0.4,
               }}
-              className="text-6xl font-bold"
+              className="text-4xl md:text-6xl font-bold"
             >
               Apa yang paling kamu rasakan pada hari ini?
             </motion.h2>
@@ -41,7 +41,8 @@ export default function HeroJournal() {
               }}
               className="text-md"
             >
-              Coba tuliskan hal-hal yang terasa berat, mebingungkan, atau mungkin membahagiakan
+              Coba tuliskan hal-hal yang terasa berat, mebingungkan, atau
+              mungkin membahagiakan
             </motion.p>
 
             <motion.div
@@ -52,8 +53,7 @@ export default function HeroJournal() {
                 delay: 0.6,
                 ease: "easeOut",
               }}
-            >
-            </motion.div>
+            ></motion.div>
           </div>
 
           <motion.div
