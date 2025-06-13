@@ -49,7 +49,7 @@ function HeaderSection() {
     <section className="bg-primary text-white py-16 pb-[220px]">
       <Container>
         <div className="max-w-md text-center space-y-7 mx-auto">
-          <h1 className="text-5xl font-bold">Yuk, Mulai Tesnya!</h1>
+          <h1 className="text-3xl md:text-5xl font-bold">Yuk, Mulai Tesnya!</h1>
           <p className="text-md">
             Tenang aja, gak ada jawaban benar atau salah. Ini cuma buat bantu
             kamu kenal diri sendiri lebih baik.
@@ -87,15 +87,16 @@ function StepCard({ step }: StepCardProps) {
   const textColor = "text-[#0E103D]";
 
   return (
-    <Card className={`text-center py-20 shadow-lg h-[288px] md:h-[320px] flex flex-col justify-center ${textColor}`}>
+    <Card
+      className={`text-center py-20 shadow-lg h-[288px] md:h-[320px] flex flex-col justify-center ${textColor}`}
+    >
       <CardHeader>
         <Image
           src={`/icons/${step.icon}`}
           alt={step.title}
           width={26}
           height={26}
-          style={{ width: "auto", height: "auto" }}
-          className="mx-auto mb-4"
+          className="mx-auto mb-4 w-1/3"
         />
         <h3 className={`text-xl font-bold ${textColor}`}>{step.title}</h3>
       </CardHeader>
@@ -111,12 +112,10 @@ function StartButton() {
     <div className="flex justify-center mt-12 pb-12">
       <Button
         size="default"
-        className="bg-accent rounded-full mx-auto md:mx-0 hover:scale-105 transition-transform text-xl px-6 py-6"
+        className="bg-accent rounded-full mx-auto md:mx-0 hover:scale-105 transition-transform text-lg px-6 py-6"
         asChild
       >
-        <Link href="/test/form">
-          Mulai Tes →
-        </Link>
+        <Link href="/test/form">Mulai Tes →</Link>
       </Button>
     </div>
   );
