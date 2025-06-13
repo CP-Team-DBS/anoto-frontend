@@ -1,6 +1,6 @@
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 import * as motion from "motion/react-client";
 
 const ANIMATION_CONFIG = {
@@ -12,7 +12,7 @@ const UI_CONSTANTS = {
   colors: {
     primary: "#2A0A5E",
     divider: "#0E103D",
-    background: "#F8F7F4"
+    background: "#F8F7F4",
   },
   profileImage: {
     path: "/profile/profile-user.svg",
@@ -21,8 +21,8 @@ const UI_CONSTANTS = {
   socialIcons: {
     size: 24,
     linkedin: "/social/linkedin.svg",
-    github: "/social/github.svg"
-  }
+    github: "/social/github.svg",
+  },
 };
 
 interface TeamMember {
@@ -33,15 +33,21 @@ interface TeamMember {
   github?: string;
 }
 
-const createFadeAnimation = (direction: 'y' | 'x' | 'scale', value: number, delay: number = 0) => ({
-  initial: direction === 'scale' 
-    ? { opacity: 0, scale: value } 
-    : { opacity: 0, [direction]: value },
-  whileInView: direction === 'scale' 
-    ? { opacity: 1, scale: 1 } 
-    : { opacity: 1, [direction]: 0 },
+const createFadeAnimation = (
+  direction: "y" | "x" | "scale",
+  value: number,
+  delay: number = 0
+) => ({
+  initial:
+    direction === "scale"
+      ? { opacity: 0, scale: value }
+      : { opacity: 0, [direction]: value },
+  whileInView:
+    direction === "scale"
+      ? { opacity: 1, scale: 1 }
+      : { opacity: 1, [direction]: 0 },
   viewport: ANIMATION_CONFIG.viewport,
-  transition: { duration: 0.5, delay, ease: ANIMATION_CONFIG.ease }
+  transition: { duration: 0.5, delay, ease: ANIMATION_CONFIG.ease },
 });
 
 const teamMembers: TeamMember[] = [
@@ -90,11 +96,11 @@ const teamMembers: TeamMember[] = [
 ];
 
 const ProfileImage = ({ name, image }: { name: string; image: string }) => (
-  <motion.div 
-    {...createFadeAnimation('scale', 0.8, 0.2)}
+  <motion.div
+    {...createFadeAnimation("scale", 0.8, 0.2)}
     className="w-32 h-32 rounded-full bg-[#2A0A5E] overflow-hidden flex items-center justify-center absolute -top-16 border-4 border-white shadow-lg"
   >
-    <Image 
+    <Image
       src={image}
       alt={`${name} profile`}
       width={UI_CONSTANTS.profileImage.size}
@@ -106,14 +112,14 @@ const ProfileImage = ({ name, image }: { name: string; image: string }) => (
   </motion.div>
 );
 
-const SocialLinks = ({ linkedin, github }: Pick<TeamMember, 'linkedin' | 'github'>) => (
-  <motion.div 
-    {...createFadeAnimation('y', 10, 0.5)}
-    className="flex gap-3"
-  >
+const SocialLinks = ({
+  linkedin,
+  github,
+}: Pick<TeamMember, "linkedin" | "github">) => (
+  <motion.div {...createFadeAnimation("y", 10, 0.5)} className="flex gap-3">
     {linkedin && (
       <Link href={linkedin} target="_blank" rel="noopener noreferrer">
-        <Image 
+        <Image
           src={UI_CONSTANTS.socialIcons.linkedin}
           alt="LinkedIn"
           width={UI_CONSTANTS.socialIcons.size}
@@ -124,7 +130,7 @@ const SocialLinks = ({ linkedin, github }: Pick<TeamMember, 'linkedin' | 'github
     )}
     {github && (
       <Link href={github} target="_blank" rel="noopener noreferrer">
-        <Image 
+        <Image
           src={UI_CONSTANTS.socialIcons.github}
           alt="GitHub"
           width={UI_CONSTANTS.socialIcons.size}
@@ -136,30 +142,36 @@ const SocialLinks = ({ linkedin, github }: Pick<TeamMember, 'linkedin' | 'github
   </motion.div>
 );
 
-const TeamMemberCard = ({ name, role, image, linkedin, github }: TeamMember) => {
+const TeamMemberCard = ({
+  name,
+  role,
+  image,
+  linkedin,
+  github,
+}: TeamMember) => {
   return (
-    <motion.div 
-      {...createFadeAnimation('y', 30)}
+    <motion.div
+      {...createFadeAnimation("y", 30)}
       className="flex flex-col items-center pt-16 px-5 pb-5 rounded-lg bg-white shadow-md relative mt-12"
     >
       <ProfileImage name={name} image={image} />
 
-      <motion.h3 
-        {...createFadeAnimation('y', 0, 0.3)}
+      <motion.h3
+        {...createFadeAnimation("y", 0, 0.3)}
         className="text-xl font-bold mb-1"
       >
         {name}
       </motion.h3>
 
-      <motion.p 
-        {...createFadeAnimation('y', 0, 0.4)}
+      <motion.p
+        {...createFadeAnimation("y", 0, 0.4)}
         className="text-gray-600 mb-4"
       >
         {role}
       </motion.p>
 
       <div className="w-[90%] h-[0.5px] bg-[#0E103D]/30 mb-4"></div>
-      
+
       <SocialLinks linkedin={linkedin} github={github} />
     </motion.div>
   );
@@ -180,10 +192,7 @@ const TeamSectionHeader = () => (
 const TeamGrid = () => (
   <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
     {teamMembers.map((member, index) => (
-      <TeamMemberCard 
-        key={index} 
-        {...member} 
-      />
+      <TeamMemberCard key={index} {...member} />
     ))}
   </div>
 );

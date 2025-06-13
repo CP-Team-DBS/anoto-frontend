@@ -15,7 +15,7 @@ export default function Footer() {
               dan merawat kesehatan mental.
             </div>
           </div>
-          <div className="flex flex-1 flex-row justify-end gap-20 mt-4 md:mt-0">
+          <div className="flex flex-1 flex-col justify-end gap-10 mt-4 md:mt-0 md:flex-row md:gap-20">
             <div className="flex flex-col gap-4 text-base font-normal min-w-[180px]">
               <span>Mulai Menulis</span>
               <span>Tentang Anoto</span>

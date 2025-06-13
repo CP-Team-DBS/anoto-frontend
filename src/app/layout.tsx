@@ -26,6 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicons/icon-144.png" />
+        <link rel="apple-touch-icon" href="/favicons/icon-144.png" />
+        <link rel="shortcut icon" href="/favicons/icon-144.png" />
+      </head>
       <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
         <Navbar />
         <main>{children}</main>
