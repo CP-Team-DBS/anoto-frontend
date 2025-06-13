@@ -155,7 +155,7 @@ export default function InsightPage() {
         {/* Insight Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-2">
-            Insight Harian
+            Insight Journaling
           </h1>
           <p className="text-white/70 text-lg">
             Tiga Emosi dominan kamu hari ini
