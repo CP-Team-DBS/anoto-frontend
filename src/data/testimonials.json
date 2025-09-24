@@ -1,0 +1,25 @@
+{
+  "testimonials": [
+    {
+      "id": "1",
+      "name": "Anonymous User",
+      "text": "Aplikasi ini sangat membantu untuk memahami kondisi mental saya. Interface yang user-friendly membuat proses tes menjadi tidak menakutkan.",
+      "rating": 5,
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "2", 
+      "name": "Sarah M",
+      "text": "Hasil tes memberikan insight yang berguna. Saya jadi lebih aware tentang kondisi kecemasan saya.",
+      "rating": 4,
+      "createdAt": "2024-01-14T14:20:00Z"
+    },
+    {
+      "id": "3",
+      "name": "Budi K",
+      "text": "Mudah digunakan dan hasilnya cukup akurat. Recommended untuk self-assessment awal.",
+      "rating": 5,
+      "createdAt": "2024-01-13T09:15:00Z"
+    }
+  ]
+}

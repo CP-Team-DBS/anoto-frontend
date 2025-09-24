@@ -1,0 +1,15 @@
+{
+  "users": [
+    {
+      "id": "user-1",
+      "name": "User Development",
+      "email": "dev@anoto.local",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "preferences": {
+        "theme": "light",
+        "notifications": true,
+        "language": "id"
+      }
+    }
+  ]
+}

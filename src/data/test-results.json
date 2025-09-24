@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "id": "test-1",
+      "userId": "user-1", 
+      "scores": [1, 2, 1, 0, 2, 1, 3],
+      "totalScore": 10,
+      "level": "normal",
+      "result": "Normal",
+      "description": "Kamu tidak merasakan kecemasan yang signifikan. Terus jaga kesehatan mentalmu!",
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "test-2",
+      "userId": "user-2",
+      "scores": [2, 2, 2, 1, 2, 2, 2], 
+      "totalScore": 13,
+      "level": "anxious_light",
+      "result": "Kecemasan Ringan",
+      "description": "Kamu mengalami kecemasan ringan. Coba teknik relaksasi dan jangan ragu konsultasi ahli.",
+      "createdAt": "2024-01-14T15:45:00Z"
+    },
+    {
+      "id": "test-3",
+      "userId": "user-3",
+      "scores": [3, 2, 3, 2, 3, 2, 3],
+      "totalScore": 18,
+      "level": "anxious_moderate", 
+      "result": "Kecemasan Sedang",
+      "description": "Kamu mengalami kecemasan sedang. Sebaiknya berkonsultasi dengan profesional untuk penanganan lebih lanjut.",
+      "createdAt": "2024-01-13T11:20:00Z"
+    }
+  ]
+}
